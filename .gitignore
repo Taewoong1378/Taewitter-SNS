@@ -48,7 +48,9 @@ build/Release
 
 # Dependency directories
 node_modules/
+연습/
 jspm_packages/
+react-nodebird-master/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/

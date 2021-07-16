@@ -25,7 +25,7 @@ const AppLayout = ({ children }) => {
                         <Link href="/profile"><a>프로필</a></Link>
                     </Menu.Item>
                     <Menu.Item>
-                        <SearchInput enterButton style={{ verticalAlign: 'middle' }} />
+                        <SearchInput enterButton />
                     </Menu.Item>
                     <Menu.Item>
                         <Link href="/signup"><a>회원가입</a></Link>
@@ -38,7 +38,7 @@ const AppLayout = ({ children }) => {
                 {/* target="blank"만 사용하면 보안위협이 있기 때문에 반드시 rel="noreferrer noopener"를 같이 써준다 */}
                 <Row gutter={8}>
                     <Col xs={24} md={6}>
-                        {isLoggedIn ? <UserProfile /> : <LoginForm/>}
+                        {isLoggedIn ? <UserProfile setIsLoggedIn={setIsLoggedIn} /> : <LoginForm setIsLoggedIn={setIsLoggedIn}/>}
                     </Col>
                     <Col xs={24} md={12}>
                         {children}
