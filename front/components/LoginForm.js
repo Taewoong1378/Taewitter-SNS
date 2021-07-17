@@ -1,8 +1,10 @@
 import React, {useState, useCallback} from 'react';
 import { Input, Form, Button } from 'antd';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Link from 'next/link';
 import styled from 'styled-components';
+import useInput from '../hooks/useInput';
+
 
 // div태그를 사용하면서 margin-top: 10px이 적용된 styled-compoents를 생성하는 법이다.
 const ButtonWrapper = styled.div`
@@ -14,17 +16,20 @@ const FormWrapper = styled(Form)`
 `;
 
 const LoginForm = ({ setIsLoggedIn }) => {
+    const [id, onChangeId] = useInput('');
+    const [password, onChangePassword] = useInput('');
 
-    const [id, setId] = useState('');
-    const [password, setPassword] = useState('');
+    // 아래꺼를 위에껄로 줄여줄 수 있다 -> 커스텀 훅 이용
+    // const [id, setId] = useState('');
+    // const [password, setPassword] = useState('');
 
-    const onChangeId = useCallback((e)=> {
-        setId(e.target.value);
-    }, []);
+    // const onChangeId = useCallback((e)=> {
+    //     setId(e.target.value);
+    // }, []);
 
-    const onChangePassword = useCallback((e)=> {
-        setPassword(e.target.value);
-    }, []);
+    // const onChangePassword = useCallback((e)=> {
+    //     setPassword(e.target.value);
+    // }, []);
 
     const onSubmitForm = useCallback(() => {
         // e.preventDefault(); antd에서 onFinish는 이미 preventDefault()가 적용돼있기 때문에 해주면 안된다.
@@ -59,6 +64,10 @@ const LoginForm = ({ setIsLoggedIn }) => {
                 </ButtonWrapper>
         </FormWrapper>
     );
+}
+
+LoginForm.propTypes = {
+    setIsLoggedIn: PropTypes.func.isRequired,
 }
 
 export default LoginForm;
