@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import 'antd/dist/antd.css';
 
+import wrapper from '../store/configureStore';
+
 // index.js, profile.js, signup.js에 모두 들어가는 패키지의 경우에는 각각에 중복해서 넣어주는게 아니라 이렇게 따라 _app.js 파일을 만들어서 넣어준다.
 
 // 즉, _app.js는 pages들의 공통 부분이고, AppLayout.js는 특정 컴포넌트들끼리 공통인 부분
@@ -27,4 +29,4 @@ App.propTypes = {
 
 // PropTypes는 부모로부터 전달받은 prop의 데이터 type을 검사한다. 자식 컴포넌트에서 명시해 놓은 데이터 타입과 부모로부터 넘겨받은 데이터 타입이 일치하지 않으면 콘솔에 에러 경고문이 띄워진다.
 
-export default App;
+export default wrapper.withRedux(App);

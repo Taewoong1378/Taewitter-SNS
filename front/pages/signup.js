@@ -59,7 +59,7 @@ const Signup = () => {
                     <div>
                         <label htmlFor="user-id">비밀번호</label>
                         <br />
-                        <Input name="user-password" value={password} required onChange={onChangePassword}/> 
+                        <Input name="user-password" value={password} required type="password" onChange={onChangePassword}/> 
                     </div>
                     <div>
                         <label htmlFor="user-password-check">비밀번호체크</label>
