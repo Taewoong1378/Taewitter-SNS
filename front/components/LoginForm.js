@@ -1,5 +1,6 @@
 import React, {useState, useCallback} from 'react';
 import { Input, Form, Button } from 'antd';
+import propTypes from 'prop-types';
 import Link from 'next/link';
 import styled from 'styled-components';
 
