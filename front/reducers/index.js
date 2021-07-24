@@ -1,45 +1,57 @@
+import { HYDRATE } from 'next-redux-wrapper';
+
 const initialState = {
-    name: 'taewoong',
-    age: 27,
-    password: 'babo',
-}
-
-// async action creator  
-
-// 동적으로 액션을 생성하는 action creator
-const changeNickname = (data) => {
-    return {
-        type: 'CHANGE_NICKNAME',
-        data,
+    user: {
+        isLoggedIn: false,
+        user: null,
+        signUpData: {},
+        loginData: {},
+    },
+    post: {
+        mainPosts: [],
     }
 };
 
-// const changeNickname = {
-//     type: 'CHANGE_NICKNAME',
-//     data: 'boogicho',
-// }
-changeNickname('boogicho');
+// 동적으로 액션을 생성하는 action creator
+export const loginAction = (data) => {
+    return {
+        type: 'LOG_IN',
+        data,
+    }
+}
 
-// const changeNickname = {
-//     type: 'CHANGE_NICKNAME',
-//     data: '강태웅',
-// }
-changeNickname('강태웅');
-
-// const changeNickname = {
-//     type: 'CHANGE_NICKNAME',
-//     data: '강뽀실',
-// }
-
+export const logoutAction = () => {
+    return {
+        type: 'LOG_OUT',
+    }
+}
 
 // (이전상태, 액션) => 다음 상태를 만들어내는 함수
 const rootReducer = (state = initialState, action) => {
     switch(action.type) {
-        case 'CHANGE_NICKNAME' :
+        case HYDRATE:
+            console.log('HYDRATE', action);
+            return { ...state, ...action.payload };
+        case 'LOG_IN':
             return {
                 ...state,
-                name: action.data,
-            }
+                user: {
+                    ...state.user,
+                    isLoggedIn: true,
+                    user: action.data,
+            },
+        };
+        case 'LOG_OUT':
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    isLoggedIn: false,
+                    user: null,
+            },
+        };
+        default:
+            return state;
     }
 };
 
