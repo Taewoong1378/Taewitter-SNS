@@ -29,7 +29,8 @@ export const initialState = {
 }
 
 const Add_POST = 'ADD_POST';
-export const addpost = {
+
+export const addPost = {
     type: Add_POST,
 }
 const dummyPost = {
@@ -37,7 +38,7 @@ const dummyPost = {
     content: '더미데이터입니다',
     User: {
         id: 1,
-        nickname: 'kte2378',
+        nickname: 'ktw2378',
     },
     Images: [],
     Comments: [],
