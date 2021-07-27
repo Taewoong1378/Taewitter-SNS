@@ -1,18 +1,18 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Card, Avatar, Button } from 'antd';
 
 import { useDispatch } from 'react-redux';
 import { logoutAction } from '../reducers/user'; 
 
 const UserProfile = () => {
-    
+    const style = useMemo(() => ({ marginTop: '30px' }));    
     const dispatch = useDispatch();
     const onLogOut= useCallback(() => {
         dispatch(logoutAction());
     }, []);
     
     return (
-        <Card
+        <Card style={style}
             actions={[
                 <div key="twit">게시글<br/>0</div>,
                 <div key="followgins">팔로잉<br/>0</div>,

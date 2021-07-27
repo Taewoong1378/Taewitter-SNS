@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Menu, Input, Row, Col } from 'antd';
@@ -14,6 +14,7 @@ const SearchInput = styled(Input.Search)`
 
 const AppLayout = ({ children }) => {
     // 서버쪽이 없다는 가정하에 더미 데이터로 로그인 구현하기
+    const style = useMemo(() => ({ fontSize: '15px', fontWeight: 'bold', marginTop: '28px', textAlign: 'center' }));
     const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
     return (
@@ -45,7 +46,7 @@ const AppLayout = ({ children }) => {
                     <Col xs={24} md={12}>
                         {children}
                     </Col>
-                    <Col xs={24} md={6}>
+                    <Col style={style} xs={24} md={6}>
                         <a href="taewoong1378.github.io/my_portfolio.github.io/" target="_blank" rel="noreferrer noopener">Made by Taewoong</a>
                     </Col>
                 </Row>
