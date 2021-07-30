@@ -22,10 +22,10 @@ const AppLayout = ({ children }) => {
             <div>
                 <Menu mode="horizontal">
                     <Menu.Item>
-                        <Link href="/"><a>노드버드</a></Link>
+                        <Link href="/"><a>메인 페이지</a></Link>
                     </Menu.Item>
                     <Menu.Item>
-                        <Link href="/profile"><a>프로필</a></Link>
+                        <Link href="/profile"><a>내 프로필</a></Link>
                     </Menu.Item>
                     <Menu.Item>
                         <SearchInput enterButton />
