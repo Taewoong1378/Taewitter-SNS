@@ -85,3 +85,4 @@ PostCard.propTypes = {
 }
 
 export default PostCard;
+

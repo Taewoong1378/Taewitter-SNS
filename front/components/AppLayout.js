@@ -47,7 +47,7 @@ const AppLayout = ({ children }) => {
                         {children}
                     </Col>
                     <Col style={style} xs={24} md={6}>
-                        <a href="taewoong1378.github.io/my_portfolio.github.io/" target="_blank" rel="noreferrer noopener">Made by Taewoong</a>
+                        <a href="https://github.com/Taewoong1378" target="_blank" rel="noreferrer noopener">Made by Taewoong</a>
                     </Col>
                 </Row>
             </div>
