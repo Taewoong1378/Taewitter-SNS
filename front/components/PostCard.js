@@ -19,7 +19,7 @@ const PostCard = ({ post }) => {
     const id = useSelector((state) => state.user.me && state.user.me.id);
 
     return (
-        <div style={{ marginBottom: 20 }}>
+        <div style={{ marginTop: 30, marginBottom: 20 }}>
             <Card
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[

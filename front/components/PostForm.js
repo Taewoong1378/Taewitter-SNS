@@ -21,8 +21,9 @@ const PostForm = () => {
         imageInput.current.click();
     }, [imageInput.current]);
     return (
-        <Form style={{ marginTop: '30px', margin: '10px 0 20px ' }} encType="multipart/form-data" onFinish={onSubmit}>
-            <Input.TextArea
+        <Form style={{ margin: '10px 0 20px ' }} encType="multipart/form-data" onFinish={onSubmit}>
+            <Input.TextArea 
+                style={{marginTop: '30px'}}
                 value={text}
                 onChange={onChangeText}
                 maxLength={140}

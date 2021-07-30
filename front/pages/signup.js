@@ -50,7 +50,9 @@ const Signup = () => {
             <Head>
                 <title>회원가입 | Nodebird</title>
             </Head>
-            <Form onFinish={onSubmit}>
+            <Form
+                style={{ width: 400, margin: 'auto', marginTop: 10 }} 
+                onFinish={onSubmit}>
                 <div>
                     <label htmlFor="user-id">아이디</label>
                     <br />
@@ -59,6 +61,7 @@ const Signup = () => {
                         value={id} 
                         required 
                         onChange={onChangeId}
+                        style={{ marginBottom: 20 }}
                     />
                 </div>
                 <div>
@@ -69,6 +72,7 @@ const Signup = () => {
                         value={nickname} 
                         required 
                         onChange={onChangeNickname}
+                        style={{ marginBottom: 20 }}
                     />
                 </div>
                 <div>
@@ -80,6 +84,7 @@ const Signup = () => {
                         value={password} 
                         required 
                         onChange={onChangePassword}
+                        style={{ marginBottom: 20 }}
                     />
                 </div>
                 <div>
@@ -94,8 +99,16 @@ const Signup = () => {
                     />
                     {passwordError && <ErrorMessage>비밀번호가 일치하지 않습니다.</ErrorMessage>}
                 </div>
-                <div>
-                    <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>위 사항에 대해 동의합니다.</Checkbox>
+                <div
+                    style={{ marginTop: 15 }}
+                >
+                    <Checkbox 
+                        name="user-term" 
+                        checked={term} 
+                        onChange={onChangeTerm}
+                    >
+                        아래 항목들에 대해 동의합니다.
+                    </Checkbox>
                     {termError && <ErrorMessage>약관에 동의하셔야합니다.</ErrorMessage>}
                 </div>
                 <div style={{ marginTop: 10}}>
