@@ -32,7 +32,13 @@ const LoginForm = () => {
             <div>
                 <label htmlFor="user-id">아이디</label>
                 <br />
-                <Input name="user-id" value={id} onChange={onChangeId} required />
+                <Input 
+                name="user-id" 
+                value={id} 
+                onChange={onChangeId} 
+                required
+                style={{ width: '80%', marginBottom: 15 }} 
+                />
             </div>
             <div>
                 <label htmlFor="user-password">비밀번호</label>
@@ -42,7 +48,8 @@ const LoginForm = () => {
                 type="password" 
                 value={password} 
                 onChange={onChangePassword} 
-                required 
+                required
+                style={{ width: '80%' }}
                 />
             </div>
             <ButtonWrapper>
@@ -51,12 +58,12 @@ const LoginForm = () => {
             </ButtonWrapper>
                 <Link href="/auth/naver">
                     <a>
-                        <img width={190} height={40} style={{ marginTop: '20px'}} src="https://lh3.googleusercontent.com/proxy/lNNECt0rdFqa-NvLmu2xvoAimYKtsSCQKd2n70ROHmmkHCjqqlZEe73m0Zbuk5yBVKhOiak0QElnVEET5s0lB5b8VsClIurdbw6AE48to5gx9tc" />
+                        <img width={180} height={38} style={{ marginTop: '20px', boxSizing: 'border-box'}} src="https://lh3.googleusercontent.com/proxy/lNNECt0rdFqa-NvLmu2xvoAimYKtsSCQKd2n70ROHmmkHCjqqlZEe73m0Zbuk5yBVKhOiak0QElnVEET5s0lB5b8VsClIurdbw6AE48to5gx9tc" />
                     </a>
                 </Link><br/>
                 <Link href="/auth/kakao">
                     <a>
-                        <img width={190} height={40} style={{ marginTop: '10px'}} src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png" />
+                        <img width={180} height={38} style={{ marginTop: '10px'}} src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png" />
                     </a>
                 </Link><br/>
         </FormWrapper>

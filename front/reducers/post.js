@@ -19,6 +19,11 @@ export const initialState = {
                 nickname: 'ktw2378',
             },
             content: '코딩 재밌겠다',
+        }, {
+            User: {
+                nickname: 'xodndxnxn',
+            },
+            content: '공부 열심히 합시다!',
         }]
     }],
     // mainPosts 외에 다른 속성들

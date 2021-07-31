@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import AppLayout from '../components/AppLayout';
 import Head from 'next/head';
-import { Form, Input, Checkbox, Button } from 'antd';
+import { Form, Input, Checkbox, Button, Popover } from 'antd';
 import styled from 'styled-components';
 import useInput from '../hooks/useInput';
 
@@ -44,6 +44,8 @@ const Signup = () => {
         console.log(id, nickname, password);
     }, [password, passwordCheck.anchor, term]);
     // 비밀번호 일치 여부의 경우에는 위에서 체크해줬지만 제출할 때 한번 더 체크해준 것
+
+    const content = '강태웅과 오래오래 잘 지낸다!';
 
     return (
         <AppLayout>
@@ -107,7 +109,7 @@ const Signup = () => {
                         checked={term} 
                         onChange={onChangeTerm}
                     >
-                        아래 항목들에 대해 동의합니다.
+                        다음 <Popover content={content}><span style={{ color: 'red', fontWeight:'bold' }}>항목</span></Popover>들에 대해 동의합니다.
                     </Checkbox>
                     {termError && <ErrorMessage>약관에 동의하셔야합니다.</ErrorMessage>}
                 </div>

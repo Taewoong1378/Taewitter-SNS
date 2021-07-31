@@ -23,7 +23,7 @@ const PostForm = () => {
     return (
         <Form style={{ margin: '10px 0 20px ' }} encType="multipart/form-data" onFinish={onSubmit}>
             <Input.TextArea 
-                style={{marginTop: '30px'}}
+                style={{marginTop: '20px'}}
                 value={text}
                 onChange={onChangeText}
                 maxLength={140}
