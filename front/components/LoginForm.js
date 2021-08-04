@@ -58,7 +58,7 @@ const LoginForm = () => {
             </ButtonWrapper>
                 <Link href="/auth/naver">
                     <a>
-                        <img width={180} height={38} style={{ marginTop: '20px', boxSizing: 'border-box'}} src="https://lh3.googleusercontent.com/proxy/lNNECt0rdFqa-NvLmu2xvoAimYKtsSCQKd2n70ROHmmkHCjqqlZEe73m0Zbuk5yBVKhOiak0QElnVEET5s0lB5b8VsClIurdbw6AE48to5gx9tc" />
+                        <img width={180} height={38} style={{ marginTop: '20px', boxSizing: 'border-box'}} src="https://lh3.googleusercontent.com/proxy/rvJR7KBAb3mqtvvnHQKmdy4md3ogjVtaTRhBcpYHyrOooQ1ZYSO37_3iPqNrdcRZbJ4gEQqXQ5LQWWDl6OsGg95qIS33MtfAY5zo0IQUMFGfNdg" />
                     </a>
                 </Link><br/>
                 <Link href="/auth/kakao">

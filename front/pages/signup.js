@@ -35,15 +35,11 @@ const Signup = () => {
     }, []);
 
     const onSubmit = useCallback(() => {
-        if(password !== passwordCheck) {
-            return setPasswordError(true);
-        }
         if(!term) {
             return setTermError(true);
         }
         console.log(id, nickname, password);
-    }, [password, passwordCheck.anchor, term]);
-    // 비밀번호 일치 여부의 경우에는 위에서 체크해줬지만 제출할 때 한번 더 체크해준 것
+    }, [term]);
 
     const content = '강태웅과 오래오래 잘 지낸다!';
 
