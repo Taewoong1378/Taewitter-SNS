@@ -2,13 +2,17 @@ import React, { useCallback } from 'react';
 import { Button, Input, Form } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { loginAction } from '../reducers/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginRequestAction } from '../reducers/user';
+import Image from 'next/image'
+import naver from '../images/naver.png';
+import kakao from '../images/kakao.png';
 
 import useInput from '../hooks/useInput';
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
+    margin-bottom: 20px;
 `;
 
 const FormWrapper = styled(Form)`
@@ -18,13 +22,14 @@ const FormWrapper = styled(Form)`
 const LoginForm = () => {
 
     const dispatch = useDispatch();
+    const { isLoggingIn } = useSelector((state) => state.user);
     // 커스텀훅으로 중복제거
     const [id, onChangeId] = useInput('');
     const [password, onChangePassword] = useInput('');
 
     const onSubmitForm = useCallback(() => {
         console.log(id, password);
-        dispatch(loginAction({ id, password }));
+        dispatch(loginRequestAction({ id, password }));
     }, [id, password]);
 
     return (
@@ -53,17 +58,17 @@ const LoginForm = () => {
                 />
             </div>
             <ButtonWrapper>
-                <Button type="primary" htmlType="submit" loading={false}>로그인</Button>
+                <Button type="primary" htmlType="submit" loading={isLoggingIn}>로그인</Button>
                 <Link href="/signup"><a><Button>회원가입</Button></a></Link>
             </ButtonWrapper>
                 <Link href="/auth/naver">
                     <a>
-                        <img width={180} height={38} style={{ marginTop: '20px', boxSizing: 'border-box'}} src="https://lh3.googleusercontent.com/proxy/rvJR7KBAb3mqtvvnHQKmdy4md3ogjVtaTRhBcpYHyrOooQ1ZYSO37_3iPqNrdcRZbJ4gEQqXQ5LQWWDl6OsGg95qIS33MtfAY5zo0IQUMFGfNdg" />
+                        <Image width={180} height={38} src={naver} />
                     </a>
                 </Link><br/>
                 <Link href="/auth/kakao">
                     <a>
-                        <img width={180} height={38} style={{ marginTop: '10px'}} src="https://www.gb.go.kr/Main/Images/ko/member/certi_kakao_login.png" />
+                        <Image width={180} height={38} src={kakao} />
                     </a>
                 </Link><br/>
         </FormWrapper>
