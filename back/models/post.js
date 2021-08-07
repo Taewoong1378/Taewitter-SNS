@@ -25,8 +25,13 @@ module.exports = class Post extends Sequelize.Model {
     db.Post.belongsTo(db.User);
     db.Post.hasMany(db.Comment);
     db.Post.hasMany(db.Image);
+    // 리트윗 관계 (1:다 관계, 하나의 게시물을 리트릿해서 똑같은 여러개의 게시물 생성)
+    db.Post.belongsTo(db.Post, { as: 'Retweet' });
+    
     // 게시글과 해시태그는 다대다 관계, 따라서 PostHashtag라는 중간 테이블 생성
     db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' });
-    db.Post.belongsToMany(db.User, { through: 'Likes', as: 'Liker' });
+    
+    // 나중에 as에 따라서 post.getLLikers처럼 게시글 좋아요 누른 사람을 가져오게 된다.
+    db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' });
   }
 };

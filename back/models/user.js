@@ -53,24 +53,22 @@ module.exports = class User extends Sequelize.Model {
     // 유저와 게시글은 일대다 관계
     db.User.hasMany(db.Post);
     db.User.hasMany(db.Comment);
-    db.User.hasMany(db.Domain);
     db.User.belongsToMany(db.User, {
       // 사용자 테이블 간의 관계 (팔로워와 팔로잉 관계)
       // Uesr 테이블이 서로를 참조하기 때문에 forergin key를 설정해주지 않을 경우 둘다 User id를 참조하여 어떤 것이 팔로워고 팔로우인지 알 수 없음. 따라서 팔로잉 아이디와 팔로워 아이디를 외래키로 설쟁해준다.
 
       // 즉, 밑에 코드는 팔로워를 찾을 때 follwing id를 보고 가져온다는 것.
       foreignKey: 'followingId',
-      as: 'Followers',
       through: 'Follow',
+      as: 'Followers',
     });
     
     db.User.belongsToMany(db.User, {
       // 밑에 코드는 팔로잉을 찾을 때 follwer id를 보고 가져온다는 것.
       foreignKey: 'followerId',
-      as: 'Followings',
       through: 'Follow',
+      as: 'Followings',
     });
-
-    db.User.belongsToMany(db.Post, { through: 'Likes', as: 'Liked' });
+    db.User.belongsToMany(db.Post, { through: 'Like', as: 'Liked' });
   }
 };

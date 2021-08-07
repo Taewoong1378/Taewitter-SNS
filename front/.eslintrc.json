@@ -28,6 +28,9 @@
         "react/jsx-filename-extension": "off",
         "react/jsx-one-expression-per-line": "off",
         "object-curly-newline": "off",
-        "linebreak-style": "off"
+        "linebreak-style": "off",
+        "react/jsx-indent": "off",
+        "react/jsx-indent-props": "off",
+        "indent": "off"
     }
 }

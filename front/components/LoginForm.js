@@ -3,8 +3,8 @@ import { Button, Input, Form } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+import Image from 'next/image';
 import { loginRequestAction } from '../reducers/user';
-import Image from 'next/image'
 import naver from '../images/naver.png';
 import kakao from '../images/kakao.png';
 
@@ -20,7 +20,6 @@ const FormWrapper = styled(Form)`
 `;
 
 const LoginForm = () => {
-
     const dispatch = useDispatch();
     const { logInLoading } = useSelector((state) => state.user);
     // 커스텀훅으로 중복제거
@@ -37,23 +36,23 @@ const LoginForm = () => {
             <div>
                 <label htmlFor="user-email">이메일</label>
                 <br />
-                <Input 
-                name="user-email" 
+                <Input
+                name="user-email"
                 type="email"
-                value={email} 
-                onChange={onChangeEmail} 
+                value={email}
+                onChange={onChangeEmail}
                 required
-                style={{ width: '80%', marginBottom: 15 }} 
+                style={{ width: '80%', marginBottom: 15 }}
                 />
             </div>
             <div>
                 <label htmlFor="user-password">비밀번호</label>
                 <br />
-                <Input 
+                <Input
                 name="user-password"
-                type="password" 
-                value={password} 
-                onChange={onChangePassword} 
+                type="password"
+                value={password}
+                onChange={onChangePassword}
                 required
                 style={{ width: '80%' }}
                 />
@@ -66,15 +65,14 @@ const LoginForm = () => {
                     <a>
                         <Image width={180} height={38} src={naver} />
                     </a>
-                </Link><br/>
+                </Link><br />
                 <Link href="/auth/kakao">
                     <a>
                         <Image width={180} height={38} src={kakao} />
                     </a>
-                </Link><br/>
+                </Link><br />
         </FormWrapper>
     );
-}
-
+};
 
 export default LoginForm;

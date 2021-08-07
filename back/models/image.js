@@ -15,7 +15,7 @@ module.exports = class Image extends Sequelize.Model {
       modelName: 'Image',
       tableName: 'images',
       paranoid: false,
-      charset: 'utf',
+      charset: 'utf8',
       collate: 'utf8_general_ci',
     });
   }

@@ -8,25 +8,22 @@ const PostForm = () => {
     const { imagePaths, addPostDone } = useSelector((state) => state.post);
     const dispatch = useDispatch();
     const [text, onChangeText, setText] = useInput('');
-    
     useEffect(() => {
-        if(addPostDone) {
+        if (addPostDone) {
             setText('');
         }
     }, [addPostDone]);
-    
     const onSubmit = useCallback(() => {
         dispatch(addPost(text));
     }, [text]);
-    
     const imageInput = useRef();
     const onClickImageUpload = useCallback(() => {
         imageInput.current.click();
     }, [imageInput.current]);
     return (
         <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
-            <Input.TextArea 
-                style={{marginTop: '20px'}}
+            <Input.TextArea
+                style={{ marginTop: '20px' }}
                 value={text}
                 onChange={onChangeText}
                 maxLength={140}
@@ -49,6 +46,6 @@ const PostForm = () => {
             </div>
         </Form>
     );
-}
+};
 
 export default PostForm;
