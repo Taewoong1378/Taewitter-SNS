@@ -15,7 +15,7 @@ const SearchInput = styled(Input.Search)`
 const AppLayout = ({ children }) => {
     // 서버쪽이 없다는 가정하에 더미 데이터로 로그인 구현하기
     const style = useMemo(() => ({ fontSize: '15px', fontWeight: 'bold', marginTop: '28px', textAlign: 'center' }));
-    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+    const { me } = useSelector((state) => state.user);
 
     return (
         <div>
@@ -41,7 +41,7 @@ const AppLayout = ({ children }) => {
                 {/* target="blank"만 사용하면 보안위협이 있기 때문에 반드시 rel="noreferrer noopener"를 같이 써준다 */}
                 <Row gutter={8}>
                     <Col xs={24} md={6}>
-                        {isLoggedIn ? <UserProfile /> : <LoginForm />}
+                        {me ? <UserProfile /> : <LoginForm />}
                     </Col>
                     <Col xs={24} md={12}>
                         {children}
