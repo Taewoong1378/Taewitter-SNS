@@ -33,6 +33,8 @@
         "react/jsx-indent-props": "off",
         "indent": "off",
         "no-trailing-spaces": "off",
-        "no-multi-spaces": "off"
+        "no-multi-spaces": "off",
+        "no-param-reassign": "off",
+        "max-len": "off"
     }
 }

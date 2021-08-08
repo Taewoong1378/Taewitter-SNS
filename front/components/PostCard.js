@@ -1,21 +1,35 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import { Button, Card, Popover, Avatar, List, Comment } from 'antd';
 import { EllipsisOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, RetweetOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
-import PostImages from './PostImages';
+import { useSelector, useDispatch } from 'react-redux';
+
 import CommentForm from './CommentForm';
+import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
+import FollowButton from './FollowButton';
+import { REMOVE_POST_REQUEST } from '../reducers/post';
 
 const PostCard = ({ post }) => {
+    const dispatch = useDispatch();
+    const { removePostLoading } = useSelector((state) => state.post);
     const [liked, setLiked] = useState(false);
     const [commentFormOpened, setCommentFormOpened] = useState(false);
+
     const onToggleLike = useCallback(() => {
         setLiked((prev) => !prev);
     }, []);
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev);
     }, []);
+
+    const onRemovePost = useCallback(() => {
+        dispatch({
+          type: REMOVE_POST_REQUEST,
+          data: post.id,
+        });
+      }, []);
 
     const id = useSelector((state) => state.user.me && state.user.me.id);
 
@@ -37,7 +51,7 @@ const PostCard = ({ post }) => {
                             ? (
                                 <>
                                     <Button>수정</Button>
-                                    <Button type="danger">삭제</Button>
+                                    <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
                                 </>
                             ) 
                             : <Button type="danger">신고</Button>}
@@ -47,6 +61,7 @@ const PostCard = ({ post }) => {
                         <EllipsisOutlined />
                     </Popover>,
                 ]}
+                extra={<FollowButton post={post} />}
             >
                 <Card.Meta 
                     avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
@@ -60,12 +75,16 @@ const PostCard = ({ post }) => {
                     <List
                         header={`${post.Comments.length}개의 댓글`}
                         itemLayout="horizontal"
-                        dataSource={post.Comments}
+                        dataSource={post.Comments || []}
                         renderItem={(item) => (
                             <li>
                                 <Comment 
                                     author={item.User.nickname}
-                                    avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                                    avatar={(
+                                        <Link href={{ pathname: '/user', query: { id: item.User.id } }} as={`/user/${item.User.id}`}>
+                                          <a><Avatar>{item.User.nickname[0]}</Avatar></a>
+                                        </Link>
+                                        )}
                                     content={item.content}
                                 />
                             </li>
