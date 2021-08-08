@@ -29,10 +29,6 @@ module.exports = class User extends Sequelize.Model {
         // 하지만 로컬 로그인이 기본이므로 defaultvalue 값을 local로 두었음.
         defaultValue: 'local',
       },
-      snsId: {
-        type: Sequelize.STRING(50),
-        allowNull: true,
-      },
     }, {
       sequelize,
       timestamps: true,

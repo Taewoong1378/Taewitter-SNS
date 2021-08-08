@@ -1,9 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import AppLayout from '../components/AppLayout';
+import Router from 'next/router';
 import Head from 'next/head';
 import { Form, Input, Checkbox, Button, Popover } from 'antd';
 import styled from 'styled-components';
+import AppLayout from '../components/AppLayout';
+
 import useInput from '../hooks/useInput';
 import { SIGN_UP_REQUEST } from '../reducers/user';
 
@@ -11,10 +13,9 @@ const ErrorMessage = styled.div`
     color: red;        
 `;
 
-const Signup = () => {    
-
+const Signup = () => {
     const dispatch = useDispatch();
-    const { signUpLoading } = useSelector((state) => state.user);
+    const { signUpDone, signUpLoading } = useSelector((state) => state.user);
 
     const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('');
@@ -23,6 +24,33 @@ const Signup = () => {
     // 비밀번호 체크는 조금 다른 부분이 있음
     const [passwordCheck, setPasswordCheck] = useState('');
     const [passwordError, setPasswordError] = useState(false);
+    const [term, setTerm] = useState('');
+    const [termError, setTermError] = useState(false);
+    
+    useEffect(() => {
+        if (signUpDone) {
+            alert('로그인했으니 메인페이지로 이동합니다.');
+            Router.push('/');
+        }
+    }, [signUpDone]);
+    
+    const onSubmit = useCallback(() => {
+        if (password !== passwordCheck) {
+          return setPasswordError(true);
+        }
+        if (!term) {
+          return setTermError(true);
+        }
+        return dispatch({
+          type: SIGN_UP_REQUEST,
+          data: {
+            email,
+            password,
+            nickname,
+          },
+        });
+      }, [email, password, passwordCheck, term]);
+    
     const onChangePasswordCheck = useCallback((e) => {
         setPasswordCheck(e.target.value);   // 여기까지였으면 커스텀 훅으로 줄일 수 있었다.
         setPasswordError(e.target.value !== password);
@@ -31,27 +59,13 @@ const Signup = () => {
         // 둘이 일치하면 passwordError가 false가 된다.
         // 따라서 passwordError가 true가 되면 에러를 표시해주면 된다.
     }, [password]);
-    
-    const [term, setTerm] = useState('');
-    const [termError, setTermError] = useState(false);
+
     const onChangeTerm = useCallback((e) => {
         setTerm(e.target.checked);
         setTermError(false);
     }, []);
-
-    const onSubmit = useCallback(() => {
-        if(!term) {
-            return setTermError(true);
-        }
-        console.log(email, nickname, password);
-        dispatch({
-            type: SIGN_UP_REQUEST,
-            data: { email, password, nickname }
-        })
-    }, [term]);
-
+    
     const content = '강태웅과 오래오래 잘 지낸다!';
-
     return (
         <AppLayout>
             <Head>
@@ -59,7 +73,8 @@ const Signup = () => {
             </Head>
             <Form
                 style={{ width: 400, margin: 'auto', marginTop: 10 }} 
-                onFinish={onSubmit}>
+                onFinish={onSubmit}
+            >
                 <div>
                     <label htmlFor="user-email">아이디</label>
                     <br />
@@ -115,11 +130,11 @@ const Signup = () => {
                         checked={term} 
                         onChange={onChangeTerm}
                     >
-                        다음 <Popover content={content}><span style={{ color: 'red', fontWeight:'bold' }}>항목</span></Popover>들에 대해 동의합니다.
+                        다음 <Popover content={content}><span style={{ color: 'red', fontWeight: 'bold' }}>항목</span></Popover>들에 대해 동의합니다.
                     </Checkbox>
                     {termError && <ErrorMessage>약관에 동의하셔야합니다.</ErrorMessage>}
                 </div>
-                <div style={{ marginTop: 10}}>
+                <div style={{ marginTop: 10 }}>
                     <Button type="primary" htmlType="submit" loading={signUpLoading}>가입하기</Button>
                 </div>
             </Form>

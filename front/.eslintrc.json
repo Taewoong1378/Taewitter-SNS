@@ -31,6 +31,8 @@
         "linebreak-style": "off",
         "react/jsx-indent": "off",
         "react/jsx-indent-props": "off",
-        "indent": "off"
+        "indent": "off",
+        "no-trailing-spaces": "off",
+        "no-multi-spaces": "off"
     }
 }
