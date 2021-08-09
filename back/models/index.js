@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize');
+
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
 const User = require('./user');
 const Post = require('./post');
 const Hashtag = require('./hashtag');
-const Comment = require('./Comment');
+const Comment = require('./comment');
 const Image = require('./image');
 
 const db = {};

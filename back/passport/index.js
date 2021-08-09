@@ -1,9 +1,6 @@
 const passport = require('passport');
 const local = require('./localStrategy');
-const kakao = require('./kakaoStrategy');
-const naver = require('./naverStrategy');
 const User = require('../models/user');
-const Post = require('../models/post');
 
 module.exports = () => {
   passport.serializeUser((user, done) => {
@@ -21,28 +18,15 @@ module.exports = () => {
   // app.use(passport.session());
   // deserializerUser가 실행되고, 아래 코드에 id 값을 보내준다
   // user의 모든 정보에 접근할 수 있게됨
-  passport.deserializeUser((id, done) => {
-    User.findOne({ 
-      where: { id },
-      include: [{
-        model: User,
-        attributes: ['id', 'nickname'],
-        as: 'Followers',
-      }, {
-        model: User,
-        attributes: ['id', 'nickname'],
-        as: 'Followings',
-      }, {
-        model: Post,
-        as: 'Liked',
-      }], 
-    })
-      .then(user => done(null, user)) // req.user로 접근 가능
-      // 로그인이 됐으면 req.isAutenticated()가 true가 출력된다.
-      .catch(err => done(err));
+  passport.deserializeUser(async(id, done) => {
+    try {
+      const exUser = await User.findOne({ where: { id }});
+      done(null, exUser);
+    } catch (error) {
+      console.error(error);
+      done(error);
+    }
   });
 
   local();
-  kakao();
-  naver();
 };

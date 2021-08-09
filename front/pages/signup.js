@@ -29,7 +29,7 @@ const Signup = () => {
     
     useEffect(() => {
         if (signUpDone) {
-            alert('로그인했으니 메인페이지로 이동합니다.');
+            alert('회원가입을 완료했으니 메인페이지로 이동합니다.');
             Router.push('/');
         }
     }, [signUpDone]);
