@@ -1,38 +1,52 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
-const { User } = require('../models');
+const { User, Post } = require('../models');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
-router.post('/login', (req, res, next) => {     // POST /user/login
+router.post('/login', isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
-        if(err) {
-            console.error(err);
-            return next(err);
+      if (err) {
+        console.error(err);
+        return next(err);
+      }
+      if (info) {
+        return res.status(401).send(info.message);
+      }
+      return req.login(user, async (loginErr) => {
+        if (loginErr) {
+          console.error(loginErr);
+          return next(loginErr);
         }
-        if(info) {
-            // 401 : 허가되지 않음
-            // http 상태코드
-            return res.status(401).send(info.message);
-        }
-        return req.login(user, async (loginErr) => {
-            if(loginErr) {
-                console.error(loginErr);
-                return next(loginErr);
-            }
-            // res.setHeader('Cookie', 'cxlhy');
-            return res.status(200).json(user);
-        });
+        const fullUserWithoutPassword = await User.findOne({
+          where: { id: user.id },
+          attributes: {
+            exclude: ['password']
+          },
+          include: [{
+            model: Post,
+          }, {
+            model: User,
+            as: 'Followings',
+          }, {
+            model: User,
+            as: 'Followers',
+          }]
+        })
+        return res.status(200).json(fullUserWithoutPassword);
+      });
     })(req, res, next);
-});
+  });
 
-router.post('/user/logout', (req, res, next) => {
+router.post('/logout', isLoggedIn, (req, res, next) => {
     req.logout();
     req.session.destroy();
+    res.send('ok');
 })
 
-router.post('/', async (req, res, next) => {    // POST /user
+router.post('/', isNotLoggedIn, async (req, res, next) => {    // POST /user
     try {
         const exUser = await User.findOne({
             where: {
@@ -63,6 +77,22 @@ router.post('/', async (req, res, next) => {    // POST /user
         console.error(error);
         next(error);
     }
+});
+
+router.get('/kakao', passport.authenticate('kakao'));
+
+router.get('/kakao/callback', passport.authenticate('kakao', {
+  failureRedirect: '/',
+}), (req, res) => {
+  res.redirect('http://localhost:3000');
+});
+
+router.get('/naver', passport.authenticate('naver'));
+
+router.get('/naver/callback', passport.authenticate('naver', {
+  failureRedirect: '/',
+}), (req, res) => {
+  res.redirect('http://localhost:3000');
 });
 
 module.exports = router;

@@ -8,7 +8,7 @@ const User = require('../models/user');
 module.exports = () => {
   passport.use(new KakaoStrategy({
     clientID: process.env.KAKAO_ID,
-    callbackURL: '/auth/kakao/callback',
+    callbackURL: '/user/kakao/callback',
     // 우리 예제에서는 accessToken과 refreshToken 사용 X
   }, async (accessToken, refreshToken, profile, done) => {
     console.log('kakao profile', profile);
@@ -21,7 +21,7 @@ module.exports = () => {
       } else {
         const newUser = await User.create({
           email: profile._json && profile._json.kakao_account_email,
-          nick: profile.displayName,
+          nickname: profile.displayName,
           snsId: profile.id,
           provider: 'kakao',
         });

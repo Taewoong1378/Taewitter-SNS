@@ -52,14 +52,14 @@ export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
-const dummyUser = (data) => ({
-  ...data,
-  nickname: 'xodnd2378',
-  id: 1,
-  Posts: [{ id: 1 }],
-  Followings: [{ nickname: '강태웅' }, { nickname: 'ktw2378' }, { nickname: 'xodndxnxn' }],
-  Followers: [{ nickname: '강태웅' }, { nickname: 'ktw2378' }, { nickname: 'xodndxnxn' }],
-});
+// const dummyUser = (data) => ({
+//   ...data,
+//   nickname: 'xodnd2378',
+//   id: 1,
+//   Posts: [{ id: 1 }],
+//   Followings: [{ nickname: '강태웅' }, { nickname: 'ktw2378' }, { nickname: 'xodndxnxn' }],
+//   Followers: [{ nickname: '강태웅' }, { nickname: 'ktw2378' }, { nickname: 'xodndxnxn' }],
+// });
 
 export const loginRequestAction = (data) => ({
   type: LOG_IN_REQUEST,

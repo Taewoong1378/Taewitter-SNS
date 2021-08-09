@@ -9,7 +9,7 @@ module.exports = () => {
   passport.use(new NaverStrategy({
     clientID: process.env.NAVER_ID,
     clientSecret: process.env.NAVER_SECRET,
-    callbackURL: '/auth/naver/callback',
+    callbackURL: '/user/naver/callback',
   }, async (accessToken, refreshToken, profile, done) => {
     console.log('naver profile', profile);
     try {
@@ -21,7 +21,7 @@ module.exports = () => {
       } else {
         const newUser = await User.create({
           email: profile._json && profile._json.naver_account_email,
-          nick: profile.displayName,
+          nickname: profile.displayName,
           snsId: profile.id,
           provider: 'naver',
         });

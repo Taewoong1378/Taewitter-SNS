@@ -29,9 +29,13 @@ module.exports = class User extends Sequelize.Model {
         // 하지만 로컬 로그인이 기본이므로 defaultvalue 값을 local로 두었음.
         defaultValue: 'local',
       },
+      snsId: {
+        type: Sequelize.STRING(50),
+        allowNull: true,
+      },
     }, {
       sequelize,
-      timestamps: false,
+      timestamps: true,
       underscored: false,
       modelName: 'User',
       tableName: 'users',
@@ -54,14 +58,14 @@ module.exports = class User extends Sequelize.Model {
       // Uesr 테이블이 서로를 참조하기 때문에 forergin key를 설정해주지 않을 경우 둘다 User id를 참조하여 어떤 것이 팔로워고 팔로우인지 알 수 없음. 따라서 팔로잉 아이디와 팔로워 아이디를 외래키로 설쟁해준다.
 
       // 즉, 밑에 코드는 팔로워를 찾을 때 follwing id를 보고 가져온다는 것.
-      foreignKey: 'followingId',
+      foreignKey: 'FollowingId',
       through: 'Follow',
       as: 'Followers',
     });
     
     db.User.belongsToMany(db.User, {
       // 밑에 코드는 팔로잉을 찾을 때 follwer id를 보고 가져온다는 것.
-      foreignKey: 'followerId',
+      foreignKey: 'FollowerId',
       through: 'Follow',
       as: 'Followings',
     });
