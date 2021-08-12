@@ -90,7 +90,7 @@ function* removePost(action) {
 }
 
 function addCommentAPI(data) {
-  return axios.post(`/post/${data.postId}/comment`, { comment: data });
+  return axios.post(`/post/${data.postId}/comment`, data);
 }
 
 function* addComment(action) {

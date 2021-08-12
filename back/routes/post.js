@@ -36,7 +36,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res) => {   // POST /pos
             return res.status(403).send('존재하지 않는 게시글입니다');   
         }
         const comment = await Comment.create({
-            content: req.body.comment,
+            content: req.body.content,
             PostId: req.params.postId,
             UserId: req.user.id,
         });

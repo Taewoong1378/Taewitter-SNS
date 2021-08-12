@@ -13,15 +13,15 @@ module.exports = () => {
   }, async (email, password, done) => {
     try {
       // 이메일 가진 사람이 있는지 검사
-      const exUser = await User.findOne({ where: { email } });
-      if (exUser) {
+      const user = await User.findOne({ where: { email } });
+      if (user) {
         // 비밀번호와 해쉬화된 비밀번호를 비교한다.
-        const result = await bcrypt.compare(password, exUser.password);
+        const result = await bcrypt.compare(password, user.password);
         if (result) {
           // done(서버에러, 로그인 성공or실패한 경우, 로그인 성공or실패시 메세지)
           // 밑에 done의 경우 서버에러는 null이고, 로그인이 성공
           // done 함수를 호추하면 auth.js의 미들웨어를 실행
-          done(null, exUser);
+          done(null, user);
         } else {
           // 비밀번호가 일치하지 않을 때
           done(null, false, { message: '비밀번호가 일치하지 않습니다.' });
