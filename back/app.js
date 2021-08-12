@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const path = require('path');
 
 const postRouter = require('./routes/post');
+const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
@@ -43,6 +44,7 @@ app.get('/', (req, res) => {
 });
 // API는 다른 서비스가 내 서비스의 기능을 실행할 수 있게 열어둔 창구
 app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 
 // 404처리 미들웨어

@@ -6,6 +6,41 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
+// 매번 사용자 정보 복구하기
+router.get('/' , async (req, res, next) => {  // GET /user
+  try {
+    if (req.user) {
+      const user = await User.findOne({
+        where: { id: req.user.id }
+      });
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: req.user.id },
+        attributes: {
+          exclude: ['password']
+        },
+        include: [{
+          model: Post,
+          attritbutes: ['id'],
+        }, {
+          model: User,
+          as: 'Followings',
+          attritbutes: ['id'],
+        }, {
+          model: User,
+          as: 'Followers',
+          attritbutes: ['id'],
+        }]
+      })
+      res.status(200).json(fullUserWithoutPassword);
+    } else {
+      res.status(200).json(null);
+    }
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.post('/login', isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
       if (err) {
@@ -21,18 +56,21 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
           return next(loginErr);
         }
         const fullUserWithoutPassword = await User.findOne({
-          where: { id: user.id },
+          where: { id: req.user.id },
           attributes: {
             exclude: ['password']
           },
           include: [{
             model: Post,
+            attritbutes: ['id'],
           }, {
             model: User,
             as: 'Followings',
+            attritbutes: ['id'],
           }, {
             model: User,
             as: 'Followers',
+            attritbutes: ['id'],
           }]
         })
         return res.status(200).json(fullUserWithoutPassword);
