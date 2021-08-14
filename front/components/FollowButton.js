@@ -7,6 +7,7 @@ import { FOLLOW_REQUEST, UNFOLLOW_REQUEST } from '../reducers/user';
 const FollowButton = ({ post }) => {
   const dispatch = useDispatch();
   const { me, followLoading, unfollowLoading } = useSelector((state) => state.user);
+
   const isFollowing = me?.Followings.find((v) => v.id === post.User.id);
   const onClickButton = useCallback(() => {
     if (isFollowing) {
@@ -21,6 +22,11 @@ const FollowButton = ({ post }) => {
       });
     }
   }, [isFollowing]);
+
+  // 게시글 작성자의 아이디와 내 아이디가 같으면 팔로우 버튼이 안 나오게 한다.
+  if (post.User.id === me?.id) {
+    return null;
+  }  
 
   return (
     <Button loading={followLoading || unfollowLoading} onClick={onClickButton}>
