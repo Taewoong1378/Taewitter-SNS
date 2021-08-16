@@ -1,9 +1,13 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const { Post, Image, Comment, User } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
+
 router.post('/', isLoggedIn, async (req, res) => {   // POST /post
     try {
         const post = await Post.create({
@@ -49,6 +53,37 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {   // DELETE /p
         console.error(error);
         next(error);
     }
+});
+
+// multer 설정
+try {
+    fs.accessSync('uploads');
+} catch (error) {
+    console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
+    fs.mkdirSync('uploads');
+}
+  
+const upload = multer({
+    // 컴퓨터에 하드디스크에 저장
+    // 나중에는 아마존 s3 클라우드에 저장할 것임
+    storage: multer.diskStorage({
+      destination(req, file, done) {
+        done(null, 'uploads/');
+      },
+      filename(req, file, done) {
+        const ext = path.extname(file.originalname);    // 확장자 추출
+        const basename = path.basename(file.originalname, ext);
+        done(null, basename + Date.now() + ext);
+      },
+    }),
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB로 용량 제한
+});
+
+// 사진을 한 장만 올릴거면 upload.single 사용. postForm에 input name="iamge" 부분에 있는 image를 받아온다.
+router.post('/images', isLoggedIn,  upload.array('image'), async (req, res, next) => {
+    // 이미지 업로드 후에 실행되는 부분
+    console.log(req.files); // 업로드된 이미지에 대한 정보
+    res.json(req.files.map((v) => v.filename));
 });
 
 router.post('/:postId/comment', isLoggedIn, async (req, res) => {   // POST /post/1/comment
