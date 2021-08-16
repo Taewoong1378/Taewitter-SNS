@@ -8,12 +8,38 @@ const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
-router.post('/', isLoggedIn, async (req, res) => {   // POST /post
+// multer 설정 - 1
+const upload = multer({
+    // 컴퓨터에 하드디스크에 저장
+    // 나중에는 아마존 s3 클라우드에 저장할 것임
+    storage: multer.diskStorage({
+      destination(req, file, done) {
+        done(null, 'uploads/');
+      },
+      filename(req, file, done) {
+        const ext = path.extname(file.originalname);    // 확장자 추출
+        const basename = path.basename(file.originalname, ext);
+        done(null, basename + '_' + Date.now() + ext);
+      },
+    }),
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB로 용량 제한
+});
+
+router.post('/', isLoggedIn, upload.none(), async (req, res) => {   // POST /post
     try {
         const post = await Post.create({
             content: req.body.content,
             UserId: req.user.id,
         });
+        if (req.body.image) {
+            if (Array.isArray(req.body.image)) {    // 이미지 여러개 업로드
+                const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image })));
+                await post.addImages(images);
+            } else {    // 이미지 한 개 업로드
+                const image = await Image.create({ src: req.body.image });
+                await post.addImages(image);
+            }
+        }
         const fullPost = await Post.findOne({
             where: { id: post.id },
             include: [{
@@ -55,7 +81,7 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {   // DELETE /p
     }
 });
 
-// multer 설정
+// multer 설정 - 2
 try {
     fs.accessSync('uploads');
 } catch (error) {
@@ -63,22 +89,6 @@ try {
     fs.mkdirSync('uploads');
 }
   
-const upload = multer({
-    // 컴퓨터에 하드디스크에 저장
-    // 나중에는 아마존 s3 클라우드에 저장할 것임
-    storage: multer.diskStorage({
-      destination(req, file, done) {
-        done(null, 'uploads/');
-      },
-      filename(req, file, done) {
-        const ext = path.extname(file.originalname);    // 확장자 추출
-        const basename = path.basename(file.originalname, ext);
-        done(null, basename + Date.now() + ext);
-      },
-    }),
-    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB로 용량 제한
-});
-
 // 사진을 한 장만 올릴거면 upload.single 사용. postForm에 input name="iamge" 부분에 있는 image를 받아온다.
 router.post('/images', isLoggedIn,  upload.array('image'), async (req, res, next) => {
     // 이미지 업로드 후에 실행되는 부분

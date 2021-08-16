@@ -49,6 +49,8 @@ export const initialState = {
 //   }],
 // }));
 
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+
 export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
 export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
 export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
@@ -110,6 +112,10 @@ export const addComment = (data) => ({
 // 이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(불변성은 지키면서)
 const reducer = (state = initialState, action) => produce(state, (draft) => {
   switch (action.type) {
+    case REMOVE_IMAGE:
+      // 서버에서는 이미지를 제거해주지 않고 프론트에서만 제거해줌
+      draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+      break;
     case UPLOAD_IMAGES_REQUEST:
       draft.uploadImagesLoading = true;
       draft.uploadImagesDone = false;
@@ -181,6 +187,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.addPostLoading = false;
       draft.addPostDone = true;
       draft.mainPosts.unshift(action.data);
+      draft.imagePaths = [];
       break;
     case ADD_POST_FAILURE:
       draft.addPostLoading = false;
