@@ -71,11 +71,13 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {   // POS
             }]
         })
         res.status(201).json(fullPost);
-    } catch (err) {
+    } catch (error) {
         console.error(error);
         next(error);
     }
 });
+
+
 
 router.delete('/:postId', isLoggedIn, async (req, res, next) => {   // DELETE /post/1
     try {
@@ -86,7 +88,7 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {   // DELETE /p
             },
         });
         res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
-    } catch (err) {
+    } catch (error) {
         console.error(error);
         next(error);
     }
@@ -105,6 +107,49 @@ router.post('/images', isLoggedIn,  upload.array('image'), async (req, res, next
     // 이미지 업로드 후에 실행되는 부분
     console.log(req.files); // 업로드된 이미지에 대한 정보
     res.json(req.files.map((v) => v.filename));
+});
+
+router.get('/:postId', async (req, res, next) => {   // POST /post/1/
+    try {
+        const post = await Post.findOne({
+            where: { id: req.params.postId },
+        });
+        if(!post) {
+            return res.status(404).send('존재하지 않는 게시글입니다');   
+        }
+        const fullPost = await Post.findOne({
+            where: { id: post.id },
+            include: [{
+                model: Post,
+                as: 'Retweet',
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: Image,
+                }]
+            }, {
+                model: User,
+                attributes: ['id', 'nickname'],
+            }, {
+                model: User,
+                as: 'Likers',
+                attributes: ['id'],
+            }, {
+                model: Image,
+            }, {
+                model: Comment,
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                }],
+            }],
+        });
+        res.status(200).json(fullPost);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
 });
 
 router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {   // POST /post/1/retweet
@@ -166,7 +211,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {   // POS
             }],
         });
         res.status(201).json(retweetWithPrevPost);
-    } catch (err) {
+    } catch (error) {
         console.error(error);
         next(error);
     }
@@ -192,7 +237,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {   // POS
             }],
         })
         res.status(201).json(fullComment);
-    } catch (err) {
+    } catch (error) {
         console.error(error);
         next(error);
     }
