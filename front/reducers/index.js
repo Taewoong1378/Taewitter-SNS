@@ -4,18 +4,19 @@ import user from './user';
 import post from './post';
 
 // (이전상태, 액션) => 다음 상태를 만들어내는 함수
-const rootReducer = combineReducers({
-    index: (state = {}, action) => {
+const rootReducer = (state, action) => {
     switch (action.type) {
         case HYDRATE:
             console.log('HYDRATE', action);
-            return { ...state, ...action.payload };
-        default:
-            return state;
+            return action.payload;
+        default: {
+            const combinedReducer = combineReducers({
+                user,
+                post,
+            });
+            return combinedReducer(state, action);
         }
-    },
-    user,
-    post,
-});
+    }
+};
 
 export default rootReducer;
