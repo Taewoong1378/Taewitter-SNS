@@ -27,7 +27,16 @@ router.get('/', async (req, res, next) => {   // GET /posts
                 model: User,
                 as: 'Likers',
                 attriutes: ['id'],
-            }]
+            }, {
+                model: Post,
+                as: 'Retweet',
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: Image,
+                }]
+            }],
         });
         res.status(200).json(posts);
     } catch (error) {

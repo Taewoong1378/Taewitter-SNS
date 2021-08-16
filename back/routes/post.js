@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { Post, Image, Comment, User } = require('../models');
+const { Post, Image, Comment, User, Hashtag } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
@@ -25,12 +25,23 @@ const upload = multer({
     limits: { fileSize: 20 * 1024 * 1024 }, // 20MB로 용량 제한
 });
 
-router.post('/', isLoggedIn, upload.none(), async (req, res) => {   // POST /post
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {   // POST /post
     try {
+        const hashtags = req.body.content.match(/#[^\s#]+/g);
         const post = await Post.create({
             content: req.body.content,
             UserId: req.user.id,
         });
+        if (hashtags) {
+            // slice(1)은 해시태그를 떼버리는 것
+            // toLowerCase는 대문자로 해시태그를 적으나 소문자로 해시태그를 적으나 똑같이 검색이 가능케하도록 씀
+            
+            // findOrCreate를 쓰면 해시태그가 없을 때는 등록되고 있을 떄는 가져온다.
+            const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({
+                where: { name: tag.slice(1).toLowerCase() },
+            }))); // [[노드, true], [리액트, true]]
+            await post.addHashtags(result.map((v) => v[0]));
+        }
         if (req.body.image) {
             if (Array.isArray(req.body.image)) {    // 이미지 여러개 업로드
                 const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image })));
@@ -96,7 +107,71 @@ router.post('/images', isLoggedIn,  upload.array('image'), async (req, res, next
     res.json(req.files.map((v) => v.filename));
 });
 
-router.post('/:postId/comment', isLoggedIn, async (req, res) => {   // POST /post/1/comment
+router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {   // POST /post/1/retweet
+    try {
+        const post = await Post.findOne({
+            where: { id: req.params.postId },
+            include: [{
+                // post.Retweet 생성
+                model: Post,
+                as: 'Retweet',
+            }],
+        });
+        if(!post) {
+            return res.status(403).send('존재하지 않는 게시글입니다');   
+        }
+        // 게시글을 쓴 사람의 아이디와 로그인한 사람의 아이디가 같은 경우 OR 다른 사람에게 리트윗된 게시글을 쓴 사람의 아이디와 로그인한 사람의 아이디가 같은 경우
+        if (req.user.id === post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)) {
+            return res.status(403).send('자신의 글은 리트윗할 수 없습니다.');
+        }
+        const retweetTargetId = post.Retweet || post.id;
+        const exPost = await Post.findOne({
+            where: {
+                UserId: req.user.id,
+                RetweetId: retweetTargetId,
+            },
+        });
+        // 리트윗한 게시글을 또 리트윗하는 경우
+        if (exPost) {
+            return res.status(403).send('이미 리트윗한 게시글입니다.');
+        }
+        const retweet = await Post.create({
+            UserId: req.user.id,
+            RetweetId: retweetTargetId,
+            content: 'retweet',
+        });
+        const retweetWithPrevPost = await Post.findOne({
+            where: { id: retweet.id },
+            include: [{
+                model: Post,
+                as: 'Retweet',
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                }, {
+                    model: Image,
+                }]
+            }, {
+                model: User,
+                attributes: ['id'],
+                as: 'Likers',
+            }, {
+                model: Image,
+            }, {
+                model: Comment,
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nickname'],
+                }],
+            }],
+        });
+        res.status(201).json(retweetWithPrevPost);
+    } catch (err) {
+        console.error(error);
+        next(error);
+    }
+});
+router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {   // POST /post/1/comment
     try {
         const post = await Post.findOne({
             where: { id: req.params.postId }
@@ -149,10 +224,6 @@ router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {
         console.error(error);
         next(error);
     }
-});
-
-router.delete('/', (req, res) => { 
-    res.json({ id: 1});
 });
 
 module.exports = router;

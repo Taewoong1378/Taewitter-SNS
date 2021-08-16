@@ -28,6 +28,9 @@ export const initialState = {
   uploadImagesLoading: false,
   uploadImagesDone: false,
   uploadImagesError: null,
+  retweetLoading: false,
+  retweetDone: false,
+  retweetError: null,
 };
 
 // export const generateDummyPost = (number) => Array(number).fill().map(() => ({
@@ -78,6 +81,10 @@ export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
+
+export const RETWEET_REQUEST = 'RETWEET_REQUEST';
+export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
+export const RETWEET_FAILURE = 'RETWEET_FAILURE';
 
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
@@ -231,8 +238,23 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       // };
     }
     case ADD_COMMENT_FAILURE:
-      draft.addCommentLoading = false;
-      draft.addCommentError = action.error;
+      draft.retweetLoading = false;
+      draft.retweetError = action.error;
+      break;
+    case RETWEET_REQUEST:
+      draft.retweetLoading = true;
+      draft.retweettDone = false;
+      draft.retweettError = null;
+      break;
+    case RETWEET_SUCCESS: {
+      draft.retweetLoading = false;
+      draft.retweettDone = true;
+      draft.mainPosts.unshift(action.data);
+      break;
+    }
+    case RETWEET_FAILURE:
+      draft.retweetLoading = false;
+      draft.retweetError = action.error;
       break;
     default:
       break;
