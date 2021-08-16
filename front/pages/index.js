@@ -58,6 +58,7 @@ const Home = () => {
   );
 };
 
+// 서버사이드 랜더링
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = '';
