@@ -14,6 +14,7 @@ import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_RE
 
 // 한글로 바꿔주기
 moment.locale('ko');
+moment.tz.setDefault('Asia/Seoul');
 
 const PostCard = ({ post }) => {
     const dispatch = useDispatch();
@@ -103,7 +104,7 @@ const PostCard = ({ post }) => {
                     cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}
                     >
                         <div style={{ float: 'right' }}>
-                            {moment().startOf('day').fromNow()}
+                            {moment().format('YYYY년 MM월 DD일 HH:mm')}
                         </div>
                         <Card.Meta 
                             avatar={(
@@ -119,7 +120,7 @@ const PostCard = ({ post }) => {
                 : (
                     <>
                     <div style={{ float: 'right' }}>
-                        {moment().startOf('day').fromNow()}
+                        {moment().format('YYYY년 MM월 DD일 HH:mm')}
                     </div>
                     <Card.Meta
                     avatar={<Link href={`/user/${post.User.id}`}><a><Avatar>{post.User.nickname[0]}</Avatar></a></Link>}
