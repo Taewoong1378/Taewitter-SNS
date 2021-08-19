@@ -5,10 +5,11 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Image from 'next/image';
 import { loginRequestAction } from '../reducers/user';
-import naver from '../images/naver.png';
-import kakao from '../images/kakao.png';
+import naver from '../public/naver.png';
+import kakao from '../public/kakao.png';
 
 import useInput from '../hooks/useInput';
+import { backUrl } from '../config/config';
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
@@ -66,12 +67,12 @@ const LoginForm = () => {
                 <Button type="primary" htmlType="submit" loading={logInLoading}>로그인</Button>
                 <Link href="/signup"><a><Button>회원가입</Button></a></Link>
             </ButtonWrapper>
-                <Link href="http://localhost:3065/user/naver">
+                <Link href={`${backUrl}/user/naver`}>
                     <a>
                         <Image width={180} height={38} src={naver} />
                     </a>
                 </Link><br />
-                <Link href="http://localhost:3065/user/kakao">
+                <Link href={`${backUrl}/user/kakao`}>
                     <a>
                         <Image width={180} height={38} src={kakao} />
                     </a>

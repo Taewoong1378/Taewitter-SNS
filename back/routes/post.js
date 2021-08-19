@@ -77,23 +77,6 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {   // POS
     }
 });
 
-
-
-router.delete('/:postId', isLoggedIn, async (req, res, next) => {   // DELETE /post/1
-    try {
-        await Post.destroy({
-            where: {
-                id: req.params.postId,
-                UserId: req.user.id,
-            },
-        });
-        res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
-    } catch (error) {
-        console.error(error);
-        next(error);
-    }
-});
-
 // multer 설정 - 2
 try {
     fs.accessSync('uploads');
@@ -108,6 +91,7 @@ router.post('/images', isLoggedIn,  upload.array('image'), async (req, res, next
     console.log(req.files); // 업로드된 이미지에 대한 정보
     res.json(req.files.map((v) => v.filename));
 });
+
 
 router.get('/:postId', async (req, res, next) => {   // POST /post/1/
     try {
@@ -198,6 +182,9 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {   // POS
                 }]
             }, {
                 model: User,
+                attributes: ['id', 'nickname'],
+            }, {
+                model: User,
                 attributes: ['id'],
                 as: 'Likers',
             }, {
@@ -216,6 +203,8 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {   // POS
         next(error);
     }
 });
+
+
 router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {   // POST /post/1/comment
     try {
         const post = await Post.findOne({
@@ -265,6 +254,21 @@ router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {
         }
         await post.removeLikers(req.user.id);
         res.json({ PostId: post.id, UserId: req.user.id });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+router.delete('/:postId', isLoggedIn, async (req, res, next) => {   // DELETE /post/1
+    try {
+        await Post.destroy({
+            where: {
+                id: req.params.postId,
+                UserId: req.user.id,
+            },
+        });
+        res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
     } catch (error) {
         console.error(error);
         next(error);

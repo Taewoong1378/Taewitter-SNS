@@ -4,9 +4,19 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
+const helmet = require('helmet');
+const hpp = require('hpp');
 const morgan = require('morgan');
 const path = require('path');
+const logger = require('./logger');
+const redis = require('redis');
+const RedisStore = require('connect-redis')(session);
 
+dotenv.config();
+const redisClient = redis.createClient({
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  password: process.env.REDIS_PASSWORD,
+});
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
@@ -14,8 +24,8 @@ const hashtagRouter = require('./routes/hashtag');
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
-dotenv.config();
 const app = express();
+app.set('port', process.env.PORT || 3065);
 sequelize.sync({ force: false })
   .then(() => {
     console.log('db 연결 성공');
@@ -23,20 +33,36 @@ sequelize.sync({ force: false })
   .catch(console.error);
 passportConfig();
 
-app.use(morgan('dev'));
-app.use(cors({
-  origin: true,
-  credentials: true,
-}));
+if (process.env.NODE_ENV === 'production') {
+  app.use(morgan('combined'));
+  app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(hpp());
+  app.use(cors({
+    origin: ['http://localhost:3000', 'http://3.36.56.118'],
+    credentials: true,
+  }));
+} else {
+  app.use(morgan('dev'));
+  app.use(cors({
+    origin: true,
+    credentials: true,
+  }));
+}
 app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
-  saveUninitialized: false,
+const sessionOption = {
   resave: false,
+  saveUninitialized: false,
   secret: process.env.COOKIE_SECRET,
-}));
+  cookie: {
+    httpOnly: true,
+    secure: false,
+  },
+  store: new RedisStore({ client: redisClient }),
+};
+app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -61,12 +87,12 @@ app.use((req, res, next) => {
 // 에러 처리 미들웨어
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
-  // 개발 모드일 떄는 에러를 보여주게 하고, 배포일 때는 보여주지 않게 하는 코드
+  // 개발 모드일 때는 에러를 보여주게 하고, 배포일 때는 보여주지 않게 하는 코드
   res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
   res.status(err.status || 500);
   res.render('error');
 });
 
-app.listen(3065, () => {
+app.listen(app.get('port'), () => {
   console.log('서버 실행 중!');
 });

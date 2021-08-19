@@ -1,12 +1,14 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Menu, Input, Row, Col } from 'antd';
 import { useSelector } from 'react-redux';
+import Router from 'next/router';
 import styled, { createGlobalStyle } from 'styled-components';
 
 import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
+import useInput from '../hooks/useInput';
 
 const Global = createGlobalStyle`
     .ant-row {
@@ -30,7 +32,12 @@ const SearchInput = styled(Input.Search)`
 const AppLayout = ({ children }) => {
     // 서버쪽이 없다는 가정하에 더미 데이터로 로그인 구현하기
     const style = useMemo(() => ({ fontSize: '15px', fontWeight: 'bold', marginTop: '28px', textAlign: 'center' }));
+    const [searchInput, onChangeSearchInput] = useInput('');
     const { me } = useSelector((state) => state.user);
+
+    const onSearch = useCallback(() => {
+        Router.push(`/hashtag/${searchInput}`);
+    }, [searchInput]);
 
     return (
         <div>
@@ -44,10 +51,13 @@ const AppLayout = ({ children }) => {
                         <Link href="/profile"><a>내 프로필</a></Link>
                     </Menu.Item>
                     <Menu.Item>
-                        <SearchInput enterButton />
-                    </Menu.Item>
-                    <Menu.Item>
-                        <Link href="/signup"><a>회원가입</a></Link>
+                        <SearchInput 
+                        enterButton
+                        value={searchInput}
+                        onChange={onChangeSearchInput}
+                        onSearch={onSearch}
+                        placeholder="해시태그 검색  ex.깅태웅"
+                        />
                     </Menu.Item>
                 </Menu>
                 {/* 모바일에서는 xs, 테블릿에서는 md */}

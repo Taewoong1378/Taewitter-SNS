@@ -14,7 +14,7 @@ const App = ({ Component }) => (
         <>  
             <Head>
                 <meta charset="utf-8" />
-                <title>NodeBird</title>
+                <title>SNS Service</title>
             </Head>      
             <Component />  
         </>
