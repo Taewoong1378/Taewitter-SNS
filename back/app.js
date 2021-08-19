@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(hpp());
   app.use(cors({
-    origin: ['http://localhost:3000', 'http://3.36.56.118'],
+    origin: ['http://localhost:3000', 'http://taewitter.com'],
     credentials: true,
   }));
 } else {
@@ -59,6 +59,7 @@ const sessionOption = {
   cookie: {
     httpOnly: true,
     secure: false,
+    domain: process.env.NODE_ENV === 'production' && '.taewitter.com'
   },
   store: new RedisStore({ client: redisClient }),
 };
