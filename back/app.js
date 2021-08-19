@@ -9,8 +9,14 @@ const hpp = require('hpp');
 const morgan = require('morgan');
 const path = require('path');
 const logger = require('./logger');
+const redis = require('redis');
+const RedisStore = require('connect-redis')(session);
 
 dotenv.config();
+const redisClient = redis.createClient({
+  url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+  password: process.env.REDIS_PASSWORD,
+});
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
@@ -46,16 +52,18 @@ app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
-  saveUninitialized: false,
+const sessionOption = {
   resave: false,
+  saveUninitialized: false,
   secret: process.env.COOKIE_SECRET,
   cookie: {
     httpOnly: true,
     secure: false,
     domain: process.env.NODE_ENV === 'production' && '.taewitter.com'
   },
-}));
+  store: new RedisStore({ client: redisClient }),
+};
+app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 
