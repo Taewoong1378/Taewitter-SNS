@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app"
+    "dev": "nodemon app",
+    "start": "cross-env NODE_ENV=production pm2 start app.js"
   },
   "author": "taewoong",
   "license": "ISC",
