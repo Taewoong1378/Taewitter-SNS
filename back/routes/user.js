@@ -141,11 +141,11 @@ router.post('/', isNotLoggedIn, async (req, res, next) => {    // POST /user
             }
         });
         if (exUser) {
-            alert('이미 사용중인 아이디입니다.');
+            if (typeof window !== 'undefined') { alert('이미 사용중인 아이디입니다.') }
             return res.status(403).send('이미 사용중인 아이디입니다.');
         }
         if (exNick) {
-            alert('이미 사용중인 닉네임입니다.');
+          if (typeof window !== 'undefined') { alert('이미 사용중인 닉네임입니다.') }
             return res.status(403).send('이미 사용중인 닉네임입니다.');
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 12);
