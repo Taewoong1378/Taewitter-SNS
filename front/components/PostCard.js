@@ -5,6 +5,7 @@ import { Button, Card, Popover, Avatar, List, Comment } from 'antd';
 import { EllipsisOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, RetweetOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
+import 'moment-timezone';
 
 import CommentForm from './CommentForm';
 import PostImages from './PostImages';
@@ -104,7 +105,7 @@ const PostCard = ({ post }) => {
                     cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}
                     >
                         <div style={{ float: 'right' }}>
-                            {moment().format('YYYY년 MM월 DD일 HH:mm')}
+                            {moment(post.createdAt).format('YYYY년 MM월 DD일 HH:mm')}
                         </div>
                         <Card.Meta 
                             avatar={(
@@ -120,7 +121,7 @@ const PostCard = ({ post }) => {
                 : (
                     <>
                     <div style={{ float: 'right' }}>
-                        {moment().format('YYYY년 MM월 DD일 HH:mm')}
+                        {moment(post.createdAt).format('YYYY년 MM월 DD일 HH:mm')}
                     </div>
                     <Card.Meta
                     avatar={<Link href={`/user/${post.User.id}`}><a><Avatar>{post.User.nickname[0]}</Avatar></a></Link>}
