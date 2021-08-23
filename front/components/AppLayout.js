@@ -56,7 +56,7 @@ const AppLayout = ({ children }) => {
                         value={searchInput}
                         onChange={onChangeSearchInput}
                         onSearch={onSearch}
-                        placeholder="해시태그 검색  ex.깅태웅"
+                        placeholder="해시태그 검색  ex.강태웅"
                         />
                     </Menu.Item>
                 </Menu>
