@@ -10,6 +10,13 @@ const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
+try {
+    fs.accessSync('uploads');
+} catch (error) {
+    console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
+    fs.mkdirSync('uploads');
+}
+
 // S3 설정
 AWS.config.update({
     accessKeyId: process.env.S3_ACCESS_KEY_ID,
@@ -83,14 +90,6 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {   // POS
     }
 });
 
-// multer 설정 - 2
-try {
-    fs.accessSync('uploads');
-} catch (error) {
-    console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
-    fs.mkdirSync('uploads');
-}
-  
 // 사진을 한 장만 올릴거면 upload.single 사용. postForm에 input name="iamge" 부분에 있는 image를 받아온다.
 router.post('/images', isLoggedIn,  upload.array('image'), async (req, res, next) => {
     // 이미지 업로드 후에 실행되는 부분

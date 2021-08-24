@@ -8,8 +8,8 @@ exports.handler = (event, context, callback) => {
     const Bucket = event.Records[0].s3.bucket.name;
     const Key = decodeURIComponent(event.Records[0].s3.object.key);
     console.log(Bucket, Key);
-    const filename = Key.split('/')[Key.split('/').length-1];
-    const ext = Key.split('.')[Key.split('.').length-1].toLowerCase();
+    const filename = Key.split('/')[Key.split('/').length - 1];
+    const ext = Key.split('.')[Key.split('.').length - 1].toLowerCase();
     const requiredFormat = ext === 'jpg' ? 'jpeg' : ext;
     console.log('filename', filename);
 
@@ -22,7 +22,7 @@ exports.handler = (event, context, callback) => {
             .toBuffer();
         await s3.putObject({
             Bucket,
-            key: `thumb/${filename}`,
+            Key: `thumb/${filename}`,
             Body: resizedImage,
         }).promise();
         console.log('put', resizedImage.length);
