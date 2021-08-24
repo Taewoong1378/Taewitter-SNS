@@ -2,15 +2,24 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 import Head from 'next/head';
-import { Input, Checkbox, Button, Popover } from 'antd';
+import { Input, Checkbox, Button, Popover, Form } from 'antd';
 import axios from 'axios';
 import { END } from 'redux-saga';
-import AppLayout from '../../components/AppLayout';
+import styled from 'styled-components';
+import AppLayout from '../components/AppLayout';
 
-import useInput from '../../hooks/useInput';
-import { LOAD_MY_INFO_REQUEST, SIGN_UP_REQUEST } from '../../reducers/user';
-import wrapper from '../../store/configureStore';
-import { ErrorMessage, FormWrapper } from './styles';
+import useInput from '../hooks/useInput';
+import { LOAD_MY_INFO_REQUEST, SIGN_UP_REQUEST } from '../reducers/user';
+import wrapper from '../store/configureStore';
+
+const ErrorMessage = styled.div`
+    color: red;
+`;
+
+const FormWrapper = styled(Form)`
+    margin: 'auto';
+    margin-top: 10px;
+`;
 
 const Signup = () => {
     const dispatch = useDispatch();
