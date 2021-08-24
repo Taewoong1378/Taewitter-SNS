@@ -1,5 +1,5 @@
 import { Button, Form, Input } from 'antd';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import useInput from '../hooks/useInput';
@@ -11,6 +11,8 @@ const CommentForm = ({ post }) => {
   const id = useSelector((state) => state.user.me?.id);
   const { addCommentDone, addCommentLoading } = useSelector((state) => state.post);
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
+  const FormItem = useMemo(() => ({ position: 'relative', margin: '0' }), []);
+  const ButtonStyle = useMemo(() => ({ position: 'absolute', right: '0', bottom: '-40px', zIndex: 1 }), []);
 
   useEffect(() => {
     if (addCommentDone) {
@@ -28,14 +30,14 @@ const CommentForm = ({ post }) => {
 
   return (
     <Form onFinish={onSubmitComment}>
-      <Form.Item style={{ position: 'relative', margin: 0 }}>
+      <Form.Item style={FormItem}>
         <Input.TextArea 
         rows={4} 
         value={commentText} 
         onChange={onChangeCommentText} 
         />
         <Button 
-        style={{ position: 'absolute', right: 0, bottom: -40, zIndex: 1 }} 
+        style={ButtonStyle} 
         type="primary" 
         htmlType="submit"
         loading={addCommentLoading}

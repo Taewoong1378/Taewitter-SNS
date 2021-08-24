@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
@@ -140,7 +141,15 @@ const PostCard = ({ post }) => {
                         dataSource={post.Comments || []}
                         renderItem={(item) => (
                             <li>
-                                <Comment 
+                                <Comment
+                                    actions={[
+                                    <div style={{ fontSize: '13px', marginRight: '10px' }}>
+                                        {moment(item.createdAt).format('MM.DD HH:mm')}
+                                    </div>,
+                                    <span style={{ fontSize: '13px' }}>
+                                        수정하기
+                                    </span>,
+                                    ]}
                                     author={item.User.nickname}
                                     avatar={<Link href={`/user/${item.User.id}`}><a><Avatar>{item.User.nickname[0]}</Avatar></a></Link>}
                                     content={item.content}

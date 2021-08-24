@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Card } from 'antd';
 import { END } from 'redux-saga';
@@ -18,6 +18,7 @@ const User = () => {
   const { id } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
   const { userInfo } = useSelector((state) => state.user);
+  const style = useMemo(() => ({ marginTop: 30 }), []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -55,7 +56,7 @@ const User = () => {
       {userInfo
         ? (
           <Card
-            style={{ marginTop: '30px' }}
+            style={style}
             actions={[
               <div key="twit">
                 게시글

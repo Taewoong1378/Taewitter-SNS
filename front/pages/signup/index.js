@@ -1,24 +1,24 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 import Head from 'next/head';
-import { Form, Input, Checkbox, Button, Popover } from 'antd';
-import styled from 'styled-components';
+import { Input, Checkbox, Button, Popover } from 'antd';
 import axios from 'axios';
 import { END } from 'redux-saga';
-import AppLayout from '../components/AppLayout';
+import AppLayout from '../../components/AppLayout';
 
-import useInput from '../hooks/useInput';
-import { LOAD_MY_INFO_REQUEST, SIGN_UP_REQUEST } from '../reducers/user';
-import wrapper from '../store/configureStore';
-
-const ErrorMessage = styled.div`
-    color: red;        
-`;
+import useInput from '../../hooks/useInput';
+import { LOAD_MY_INFO_REQUEST, SIGN_UP_REQUEST } from '../../reducers/user';
+import wrapper from '../../store/configureStore';
+import { ErrorMessage, FormWrapper } from './styles';
 
 const Signup = () => {
     const dispatch = useDispatch();
     const { signUpDone, signUpLoading, signUpError, me } = useSelector((state) => state.user);
+    const inputMargin = useMemo(() => ({ marginBottom: '14px' }), []);
+    const contentStyle = useMemo(() => ({ fontWeight: 'bold', color: 'red' }), []);
+    const marginTop15 = useMemo(() => ({ marginTop: '15px' }), []);
+    const marginTop10 = useMemo(() => ({ marginTop: '10px' }), []);
 
     useEffect(() => {
         if ((me && me.id)) {
@@ -86,12 +86,11 @@ const Signup = () => {
             <Head>
                 <title>회원가입 | Nodebird</title>
             </Head>
-            <Form
-                style={{ width: 400, margin: 'auto', marginTop: 10 }} 
+            <FormWrapper
                 onFinish={onSubmit}
             >
                 <div>
-                    <label htmlFor="user-email">아이디</label>
+                    <label htmlFor="user-email">이메일</label>
                     <br />
                     <Input 
                         name="user-email" 
@@ -99,7 +98,7 @@ const Signup = () => {
                         value={email} 
                         required 
                         onChange={onChangeEmail}
-                        style={{ marginBottom: 20 }}
+                        style={inputMargin}
                     />
                 </div>
                 <div>
@@ -110,7 +109,7 @@ const Signup = () => {
                         value={nickname} 
                         required 
                         onChange={onChangeNickname}
-                        style={{ marginBottom: 20 }}
+                        style={inputMargin}
                     />
                 </div>
                 <div>
@@ -122,7 +121,7 @@ const Signup = () => {
                         value={password} 
                         required 
                         onChange={onChangePassword}
-                        style={{ marginBottom: 20 }}
+                        style={inputMargin}
                     />
                 </div>
                 <div>
@@ -138,21 +137,21 @@ const Signup = () => {
                     {passwordError && <ErrorMessage>비밀번호가 일치하지 않습니다.</ErrorMessage>}
                 </div>
                 <div
-                    style={{ marginTop: 15 }}
+                    style={marginTop15}
                 >
                     <Checkbox 
                         name="user-term" 
                         checked={term} 
                         onChange={onChangeTerm}
                     >
-                        다음 <Popover content={content}><span style={{ color: 'red', fontWeight: 'bold' }}>항목</span></Popover>들에 대해 동의합니다.
+                        다음 <Popover content={content}><span style={contentStyle}>항목</span></Popover>들에 대해 동의합니다.
                     </Checkbox>
                     {termError && <ErrorMessage>약관에 동의하셔야합니다.</ErrorMessage>}
                 </div>
-                <div style={{ marginTop: 10 }}>
+                <div style={marginTop10}>
                     <Button type="primary" htmlType="submit" loading={signUpLoading}>가입하기</Button>
                 </div>
-            </Form>
+            </FormWrapper>
         </AppLayout>
     );
 };

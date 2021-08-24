@@ -201,8 +201,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadPostError = action.error;
       break;
     case LOAD_USER_POSTS_REQUEST:
-    case LOAD_POSTS_REQUEST:
     case LOAD_HASHTAG_POSTS_REQUEST:
+    case LOAD_POSTS_REQUEST:
       draft.loadPostsLoading = true;
       draft.loadPostsDone = false;
       draft.loadPostsError = null;

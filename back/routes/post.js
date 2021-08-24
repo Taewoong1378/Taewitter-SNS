@@ -25,7 +25,7 @@ const upload = multer({
         s3: new AWS.S3(),
         bucket: 'taewitter',
         key(req, file, cb) {
-            cb(null, `original/${Date.now()}_${path.basenam(file.originalname)}`)
+            cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
         }
     }),
     limits: { fileSize: 20 * 1024 * 1024 }, // 20MB로 용량 제한

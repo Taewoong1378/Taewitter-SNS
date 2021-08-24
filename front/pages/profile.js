@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import { useSelector } from 'react-redux';
 import Router from 'next/router';
@@ -21,6 +21,7 @@ const Profile = () => {
   const { me } = useSelector((state) => state.user);
   const [followersLimit, setFollowersLimit] = useState(3);
   const [followingsLimit, setFollowingsLimit] = useState(3);
+  const style = useMemo(() => ({ margin: 20 }), []);
 
   // swr 사용법
   const { data: followersData, error: followerError } = useSWR(`${backUrl}/user/followers?limit=${followersLimit}`, fetcher);
@@ -71,7 +72,7 @@ const Profile = () => {
         onClickMore={loadMoreFollowings}
         loading={!followingsData && !followingError}
       />
-      <div style={{ margin: '20px' }} />  
+      <div style={style} />  
       <FollowList
         header="팔로워 목록"
         data={followersData}
@@ -83,6 +84,8 @@ const Profile = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  console.log('getServerSideProps start');
+  console.log(context.req.headers);
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = '';
   if (context.req && cookie) {
@@ -92,7 +95,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     type: LOAD_MY_INFO_REQUEST,
   });
   context.store.dispatch(END);
+  console.log('getServerSideProps end');
   await context.store.sagaTask.toPromise();
 });
-
 export default Profile;
