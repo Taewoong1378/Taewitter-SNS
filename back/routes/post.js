@@ -26,8 +26,6 @@ AWS.config.update({
 
 // multer 설정 - 1
 const upload = multer({
-    // 컴퓨터에 하드디스크에 저장
-    // 나중에는 아마존 s3 클라우드에 저장할 것임
     storage: multerS3({
         s3: new AWS.S3(),
         bucket: 'taewitter',
