@@ -59,7 +59,7 @@ const sessionOption = {
   cookie: {
     httpOnly: true,
     secure: false,
-    domain: process.env.NODE_ENV === 'production' && '.taewitter.com '
+    domain: process.env.NODE_ENV === 'production' && '.taewitter.com'
   },
   store: new RedisStore({ client: redisClient }),
 };
