@@ -95,7 +95,7 @@ try {
 router.post('/images', isLoggedIn,  upload.array('image'), async (req, res, next) => {
     // 이미지 업로드 후에 실행되는 부분
     console.log(req.files); // 업로드된 이미지에 대한 정보
-    res.json(req.files.map((v) => v.location));
+    res.json(req.files.map((v) => v.location.replace(/\/original\//, '/thumb/')));
     // S3를 이용하지 않을 때는 v.filename
 });
 
