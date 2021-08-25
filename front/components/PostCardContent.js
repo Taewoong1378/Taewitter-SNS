@@ -7,7 +7,7 @@ const PostCardContent = ({ postData }) => ( // 첫 번째 게시글 #해시태�
     {postData.split(/(#[^\s#]+)/g).map((v, i) => {
       if (v.match(/(#[^\s#]+)/)) {
         // eslint-disable-next-line react/no-array-index-key
-        return <Link href={`/hashtag/${v.slice(1)}`} key={i}><a>{v}</a></Link>;
+        return <Link href={`/hashtag/${v.slice(1)}`} prefetch={false} key={i}><a>{v}</a></Link>;
       }
       return v;
     })}
