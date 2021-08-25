@@ -34,6 +34,7 @@ sequelize.sync({ force: false })
 passportConfig();
 
 if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
   app.use(morgan('combined'));
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(hpp());
@@ -56,8 +57,10 @@ const sessionOption = {
   resave: false,
   saveUninitialized: false,
   secret: process.env.COOKIE_SECRET,
+  // proxy: true,
   cookie: {
     httpOnly: true,
+    // secure: true,
     secure: false,
     domain: process.env.NODE_ENV === 'production' && '.taewitter.com'
   },

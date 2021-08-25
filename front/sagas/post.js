@@ -28,6 +28,9 @@ import {
   REMOVE_POST_FAILURE,
   REMOVE_POST_REQUEST,
   REMOVE_POST_SUCCESS,
+  REVISE_POST_FAILURE,
+  REVISE_POST_REQUEST,
+  REVISE_POST_SUCCESS,
   RETWEET_FAILURE,
   RETWEET_REQUEST,
   RETWEET_SUCCESS,
@@ -232,6 +235,26 @@ function* removePost(action) {
   }
 }
 
+function revisePostAPI(data) {
+  return axios.patch(`/post/${data.PostId}`, data);
+}
+
+function* revisePost(action) {
+  try {
+    const result = yield call(revisePostAPI, action.data);
+    yield put({
+      type: REVISE_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: REVISE_POST_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function addCommentAPI(data) {
   return axios.post(`/post/${data.postId}/comment`, data);
 }
@@ -306,6 +329,10 @@ function* watchRemovePost() {
   yield takeLatest(REMOVE_POST_REQUEST, removePost);
 }
 
+function* watchRevisePost() {
+  yield takeLatest(REVISE_POST_REQUEST, revisePost);
+}
+
 function* watchAddComment() {
   yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
@@ -325,6 +352,7 @@ export default function* postSaga() {
     fork(watchLoadHashtagPosts),
     fork(watchLoadPosts),
     fork(watchRemovePost),
+    fork(watchRevisePost),
     fork(watchAddComment),
     fork(watchRetweet),
   ]);

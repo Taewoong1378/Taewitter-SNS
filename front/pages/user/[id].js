@@ -17,8 +17,8 @@ const User = () => {
   const router = useRouter();
   const { id } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
-  const { userInfo } = useSelector((state) => state.user);
-  const style = useMemo(() => ({ marginTop: 30 }), []);
+  const { userInfo, me } = useSelector((state) => state.user);
+  const style = useMemo(() => ({ marginTop: 30, marginBottom: 20 }), []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -53,7 +53,7 @@ const User = () => {
           <meta property="og:url" content={`https://nodebird.com/user/${id}`} />
         </Head>
       )}
-      {userInfo
+      {userInfo && (userInfo.id !== me?.id)
         ? (
           <Card
             style={style}

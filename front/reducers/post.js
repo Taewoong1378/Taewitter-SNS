@@ -26,6 +26,9 @@ export const initialState = {
   removePostLoading: false,
   removePostDone: false,
   removePostError: null,
+  revisePostLoading: false,
+  revisePostDone: false,
+  revisePostError: null,
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
@@ -93,6 +96,10 @@ export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
+
+export const REVISE_POST_REQUEST = 'REVISE_POST_REQUEST';
+export const REVISE_POST_SUCCESS = 'REVISE_POST_SUCCESS';
+export const REVISE_POST_FAILURE = 'REVISE_POST_FAILURE';
 
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
@@ -249,6 +256,20 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case REMOVE_POST_FAILURE:
       draft.removePostLoading = false;
       draft.removePostError = action.error;
+      break;
+    case REVISE_POST_REQUEST:
+      draft.revisePostLoading = true;
+      draft.revisePostDone = false;
+      draft.revisePostError = null;
+      break;
+    case REVISE_POST_SUCCESS:
+      draft.revisePostLoading = false;
+      draft.revisePostDone = true;
+      draft.mainPosts.find((v) => v.id === action.data.PostId).content = action.data.content;
+      break;
+    case REVISE_POST_FAILURE:
+      draft.revisePostLoading = false;
+      draft.revisePostError = action.error;
       break;
     case ADD_COMMENT_REQUEST:
       draft.addCommentLoading = true;

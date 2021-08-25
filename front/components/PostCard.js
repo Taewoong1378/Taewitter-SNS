@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Button, Card, Popover, Avatar, List, Comment } from 'antd';
@@ -12,7 +12,7 @@ import CommentForm from './CommentForm';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import FollowButton from './FollowButton';
-import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
+import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, REVISE_POST_REQUEST } from '../reducers/post';
 
 // 한글로 바꿔주기
 moment.locale('ko');
@@ -20,8 +20,9 @@ moment.tz.setDefault('Asia/Seoul');
 
 const PostCard = ({ post }) => {
     const dispatch = useDispatch();
-    const { removePostLoading } = useSelector((state) => state.post);
+    const { removePostLoading, revisePostDone } = useSelector((state) => state.post);
     const [commentFormOpened, setCommentFormOpened] = useState(false);
+    const [editMode, setEditMode] = useState(false);
     const id = useSelector((state) => state.user.me && state.user.me.id);
 
     const onLike = useCallback(() => {
@@ -54,6 +55,24 @@ const PostCard = ({ post }) => {
         });
       }, [id]);
 
+    const onClickRevise = useCallback(() => {
+        setEditMode(true);
+    }, []);
+
+    const onCancelRevisePost = useCallback(() => {
+        setEditMode(false);
+    }, []);
+
+    const onRevisePost = useCallback((editText) => () => {
+        dispatch({
+            type: REVISE_POST_REQUEST,
+            data: {
+                PostId: post.id,
+                content: editText,
+            },
+        });
+    }, [post]);
+
     const onRetweet = useCallback(() => {
         if (!id) {
             return alert('로그인이 필요합니다');
@@ -67,7 +86,13 @@ const PostCard = ({ post }) => {
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev);
     }, []);
-
+    
+    useEffect(() => {
+        if (revisePostDone) {
+            onCancelRevisePost();
+        }
+    }, [revisePostDone]);
+    
     const liked = post.Likers.find((v) => v.id === id);
     return (
         <div style={{ marginTop: 30, marginBottom: 20 }}>
@@ -86,7 +111,7 @@ const PostCard = ({ post }) => {
                             {id && post.User.id === id 
                             ? (
                                 <>
-                                    <Button>수정</Button>
+                                    {!post.RetweetId && <Button onClick={onClickRevise}>수정</Button>}
                                     <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
                                 </>
                             ) 
@@ -115,7 +140,7 @@ const PostCard = ({ post }) => {
                             </Link>
                             )}
                         title={post.Retweet.User.nickname}
-                        description={<PostCardContent postData={post.Retweet.content} />}
+                        description={<PostCardContent postData={post.Retweet.content} onCancelRevisePost={onCancelRevisePost} />}
                         />
                     </Card>
                 )
@@ -127,7 +152,8 @@ const PostCard = ({ post }) => {
                     <Card.Meta
                     avatar={<Link href={`/user/${post.User.id}`} prefetch={false}><a><Avatar>{post.User.nickname[0]}</Avatar></a></Link>}
                     title={post.User.nickname}
-                    description={<PostCardContent postData={post.content} />}
+                    // editMode는 true면 textarea를 보여주고 false면 기존 게시글을 보여준다.
+                    description={<PostCardContent editMode={editMode} onCancelRevisePost={onCancelRevisePost} postData={post.content} onRevisePost={onRevisePost} />}
                     />
                     </>
                 )}
