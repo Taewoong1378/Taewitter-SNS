@@ -4,7 +4,7 @@ module.exports = class Image extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
       src: {
-        type: Sequelize.STRING(200),
+        type: Sequelize.STRING(400),
         // 이미지는 url이기 때문에 src가 매우 길어질 수 있다.
         allowNull: false,
       },

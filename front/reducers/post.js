@@ -101,6 +101,10 @@ export const REVISE_POST_REQUEST = 'REVISE_POST_REQUEST';
 export const REVISE_POST_SUCCESS = 'REVISE_POST_SUCCESS';
 export const REVISE_POST_FAILURE = 'REVISE_POST_FAILURE';
 
+export const REVISE_COMMENT_REQUEST = 'REVISE_COMMENT_REQUEST';
+export const REVISE_COMMENT_SUCCESS = 'REVISE_COMMENT_SUCCESS';
+export const REVISE_COMMENT_FAILURE = 'REVISE_COMMENT_FAILURE';
+
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
@@ -270,6 +274,20 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case REVISE_POST_FAILURE:
       draft.revisePostLoading = false;
       draft.revisePostError = action.error;
+      break;
+    case REVISE_COMMENT_REQUEST:
+      draft.reviseCommentLoading = true;
+      draft.reviseCommentDone = false;
+      draft.reviseCommentError = null;
+      break;
+    case REVISE_COMMENT_SUCCESS:
+      draft.reviseCommentLoading = false;
+      draft.reviseCommentDone = true;
+      draft.mainPosts.find((v) => v.id === action.data.PostId).Comments = action.data;
+      break;
+    case REVISE_COMMENT_FAILURE:
+      draft.reviseCommentLoading = false;
+      draft.reviseCommentError = action.error;
       break;
     case ADD_COMMENT_REQUEST:
       draft.addCommentLoading = true;

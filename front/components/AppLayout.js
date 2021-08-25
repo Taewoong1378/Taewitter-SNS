@@ -52,7 +52,7 @@ const AppLayout = ({ children }) => {
                     </Menu.Item>
                     <Menu.Item>
                         <SearchInput 
-                        enterButton
+                        enterButton="검색"
                         value={searchInput}
                         onChange={onChangeSearchInput}
                         onSearch={onSearch}

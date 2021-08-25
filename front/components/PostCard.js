@@ -92,7 +92,7 @@ const PostCard = ({ post }) => {
             onCancelRevisePost();
         }
     }, [revisePostDone]);
-    
+
     const liked = post.Likers.find((v) => v.id === id);
     return (
         <div style={{ marginTop: 30, marginBottom: 20 }}>
