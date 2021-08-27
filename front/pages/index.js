@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import axios from 'axios';
 
+import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
-import AppLayout from '../components/AppLayout';
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import wrapper from '../store/configureStore';
@@ -17,27 +17,18 @@ const Home = () => {
 
   useEffect(() => {
     if (retweetError) {
-        alert(retweetError);
+      alert(retweetError);
     }
   }, [retweetError]);
 
-  // useEffect(() => {
-  //   dispatch({
-  //     type: LOAD_USER_REQUEST,
-  //   });
-  //   dispatch({
-  //     type: LOAD_POSTS_REQUEST,
-  //   });
-  // }, []);
-
   useEffect(() => {
     function onScroll() {
-      if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+      if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
         if (hasMorePosts && !loadPostsLoading) {
           const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
             type: LOAD_POSTS_REQUEST,
-            lastId, 
+            lastId,
           });
         }
       }
@@ -46,17 +37,15 @@ const Home = () => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [mainPosts, hasMorePosts, loadPostsLoading]);
-
+  }, [hasMorePosts, loadPostsLoading, mainPosts]);
   return (
     <AppLayout>
       {me && <PostForm />}
-      {mainPosts.map((post) => <PostCard key={post.id} post={post}  />)}
+      {mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
     </AppLayout>
   );
 };
 
-// 서버사이드 랜더링
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = '';

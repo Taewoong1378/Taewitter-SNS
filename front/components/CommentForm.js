@@ -27,25 +27,27 @@ const CommentForm = ({ post }) => {
       data: { content: commentText, postId: post.id, userId: id },
     });
   }, [commentText, id]);
-
+  
   return (
-    <Form onFinish={onSubmitComment}>
-      <Form.Item style={FormItem}>
-        <Input.TextArea 
-        rows={4} 
-        value={commentText} 
-        onChange={onChangeCommentText} 
-        />
-        <Button 
-        style={ButtonStyle} 
-        type="primary" 
-        htmlType="submit"
-        loading={addCommentLoading}
-        >
-          게시
-        </Button>
-      </Form.Item>
-    </Form>
+      <>
+        <Form onFinish={onSubmitComment}>
+          <Form.Item style={FormItem}>
+            <Input.TextArea 
+            rows={4} 
+            value={commentText}
+            onChange={onChangeCommentText} 
+            />
+            <Button 
+            style={ButtonStyle} 
+            type="primary" 
+            htmlType="submit"
+            loading={addCommentLoading}
+            >
+              게시
+            </Button>
+          </Form.Item>
+        </Form>
+      </>
   );
 };
 

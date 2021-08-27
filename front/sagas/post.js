@@ -43,6 +43,9 @@ import {
   REVISE_COMMENT_SUCCESS,
   REVISE_COMMENT_FAILURE,
   REVISE_COMMENT_REQUEST,
+  REMOVE_COMMENT_SUCCESS,
+  REMOVE_COMMENT_FAILURE,
+  REMOVE_COMMENT_REQUEST,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
@@ -238,6 +241,26 @@ function* removePost(action) {
   }
 }
 
+function removeCommentAPI(data) {
+  return axios.delete(`/post/${data.PostId}/comment`);
+}
+
+function* removeComment(action) {
+  try {
+    const result = yield call(removeCommentAPI, action.data);
+    yield put({
+      type: REMOVE_COMMENT_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: REMOVE_COMMENT_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function revisePostAPI(data) {
   return axios.patch(`/post/${data.PostId}`, data);
 }
@@ -352,6 +375,10 @@ function* watchRemovePost() {
   yield takeLatest(REMOVE_POST_REQUEST, removePost);
 }
 
+function* watchRemoveComment() {
+  yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
+}
+
 function* watchRevisePost() {
   yield takeLatest(REVISE_POST_REQUEST, revisePost);
 }
@@ -379,6 +406,7 @@ export default function* postSaga() {
     fork(watchLoadHashtagPosts),
     fork(watchLoadPosts),
     fork(watchRemovePost),
+    fork(watchRemoveComment),
     fork(watchRevisePost),
     fork(watchReviseComment),
     fork(watchAddComment),

@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import { Button, Card, Popover, Avatar, List, Comment } from 'antd';
+import { Button, Card, Popover, Avatar } from 'antd';
 import { EllipsisOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, RetweetOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -13,6 +13,7 @@ import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import FollowButton from './FollowButton';
 import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, REVISE_POST_REQUEST } from '../reducers/post';
+import CommentEditForm from './CommentEditForm';
 
 // 한글로 바꿔주기
 moment.locale('ko');
@@ -161,28 +162,7 @@ const PostCard = ({ post }) => {
             {commentFormOpened && (
                 <div>
                     <CommentForm post={post} />
-                    <List
-                        header={`${post.Comments.length}개의 댓글`}
-                        itemLayout="horizontal"
-                        dataSource={post.Comments || []}
-                        renderItem={(item) => (
-                            <li>
-                                <Comment
-                                    actions={[
-                                    <div style={{ fontSize: '13px', marginRight: '10px' }}>
-                                        {moment(item.createdAt).format('MM.DD HH:mm')}
-                                    </div>,
-                                    <span style={{ fontSize: '13px' }}>
-                                        수정하기
-                                    </span>,
-                                    ]}
-                                    author={item.User.nickname}
-                                    avatar={<Link href={`/user/${item.User.id}`} prefetch={false}><a><Avatar>{item.User.nickname[0]}</Avatar></a></Link>}
-                                    content={item.content}
-                                />
-                            </li>
-                        )}
-                    />
+                    <CommentEditForm post={post} />
                 </div>
             )}
         </div>

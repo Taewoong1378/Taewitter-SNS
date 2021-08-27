@@ -57,10 +57,8 @@ const sessionOption = {
   resave: false,
   saveUninitialized: false,
   secret: process.env.COOKIE_SECRET,
-  // proxy: true,
   cookie: {
     httpOnly: true,
-    // secure: true,
     secure: false,
     domain: process.env.NODE_ENV === 'production' && '.taewitter.com'
   },
