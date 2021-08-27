@@ -320,7 +320,7 @@ router.delete('/:postId/comment', isLoggedIn, async (req, res, next) => {   // D
                 attributes: ['id', 'nickname'],
             }],
         });
-        res.status(200).json({ id: comment.id, PostId: post.id, UserId: req.user.id });
+        res.status(200).json({ id: comment.id, PostId: parseInt(req.params.postId, 10), UserId: req.user.id });
     } catch (error) {
         console.error(error);
         next(error);

@@ -162,7 +162,7 @@ const PostCard = ({ post }) => {
             {commentFormOpened && (
                 <div>
                     <CommentForm post={post} />
-                    <CommentEditForm post={post} />
+                    <CommentEditForm post={post} commentData={post.Comments} />
                 </div>
             )}
         </div>

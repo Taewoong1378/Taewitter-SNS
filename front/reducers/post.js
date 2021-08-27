@@ -1,6 +1,7 @@
 // import shortId from 'shortid';
 // import faker from 'faker';
 
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 import produce from '../util/produce';
 
 export const initialState = {
@@ -276,11 +277,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.removeCommentDone = false;
       draft.removeCommentError = null;
       break;
-    case REMOVE_COMMENT_SUCCESS:
+    case REMOVE_COMMENT_SUCCESS: {
       draft.removeCommentLoading = false;
       draft.removeCommentDone = true;
-      draft.mainPosts.filter((v) => v.id === action.data.PostId).Comments = action.data;
+      draft.mainPosts = draft.mainPosts.filter((v) => v.Comments.id !== action.data.id);
       break;
+    }
     case REMOVE_COMMENT_FAILURE:
       draft.removeCommentLoading = false;
       draft.removeCommentError = action.error;
@@ -304,11 +306,13 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.reviseCommentDone = false;
       draft.reviseCommentError = null;
       break;
-    case REVISE_COMMENT_SUCCESS:
+    case REVISE_COMMENT_SUCCESS: {
+      const comment = draft.mainPosts.find((v) => v.Comments.id === action.data.id);
+      console.log(comment);
       draft.reviseCommentLoading = false;
       draft.reviseCommentDone = true;
-      draft.mainPosts.find((v) => v.id === action.data.PostId).Comments = action.data;
       break;
+    }
     case REVISE_COMMENT_FAILURE:
       draft.reviseCommentLoading = false;
       draft.reviseCommentError = action.error;

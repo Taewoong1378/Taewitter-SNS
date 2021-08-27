@@ -8,7 +8,8 @@ import { REMOVE_COMMENT_REQUEST, REVISE_COMMENT_REQUEST } from '../reducers/post
 import 'moment-timezone';
 
 const { TextArea } = Input;
-const CommentEditForm = ({ post }) => {
+const CommentEditForm = ({ post, commentData }) => {
+    console.log('commentData: ', commentData);
     const dispatch = useDispatch();
     const id = useSelector((state) => state.user.me?.id);
     const [editText, setEditText] = useState('');
@@ -25,6 +26,7 @@ const CommentEditForm = ({ post }) => {
                 content: editText,
                 PostId: post.id,
                 UserId: id,
+                id: post.Comments.id,
             },
         });
     }, [editText, id]);
@@ -38,6 +40,7 @@ const CommentEditForm = ({ post }) => {
           data: {
             PostId: post.id,
             UserId: id,
+            id: post.Comments.id,
           },
         });
     }, [id]);
@@ -64,8 +67,7 @@ const CommentEditForm = ({ post }) => {
           )
           : (
             <List
-            // header={`${post.Comments.length}개의 댓글`}
-            header="0개의 댓글"
+            header={`${post.Comments.length}개의 댓글`}
             itemLayout="horizontal"
             dataSource={post.Comments || []}
             renderItem={(item) => (
@@ -95,6 +97,7 @@ const CommentEditForm = ({ post }) => {
 };
 
 CommentEditForm.propTypes = {
+    commentData: PropTypes.array.isRequired,
     post: PropTypes.object.isRequired,
 };
   
