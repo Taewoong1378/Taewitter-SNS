@@ -6,10 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { REMOVE_COMMENT_REQUEST, REVISE_COMMENT_REQUEST } from '../reducers/post';
 import 'moment-timezone';
+import CommentRemoveBtn from './CommentRemoveBtn';
 
 const { TextArea } = Input;
-const CommentEditForm = ({ post, commentData }) => {
-    console.log('commentData: ', commentData);
+const CommentEditForm = ({ post }) => {
     const dispatch = useDispatch();
     const id = useSelector((state) => state.user.me?.id);
     const [editText, setEditText] = useState('');
@@ -31,19 +31,18 @@ const CommentEditForm = ({ post, commentData }) => {
         });
     }, [editText, id]);
 
-    const onRemoveComment = useCallback(() => {
+    const onRemoveComment = useCallback((CommentId) => () => {
         if (!id) {
             return alert('로그인이 필요합니다');
         }
         return dispatch({
           type: REMOVE_COMMENT_REQUEST,
           data: {
+            CommentId,
             PostId: post.id,
-            UserId: id,
-            id: post.Comments.id,
           },
         });
-    }, [id]);
+    }, [post.id]);
 
     const onClickReviseComment = useCallback(() => {
         setCommentEditMode(true);
@@ -73,19 +72,27 @@ const CommentEditForm = ({ post, commentData }) => {
             renderItem={(item) => (
                 <li>
                     <Comment
-                        actions={[
+                        actions={id && item.User.id === id 
+                        ? [
                         <div style={{ fontSize: '13px', marginRight: '10px' }}>
                             {moment(item.createdAt).format('MM.DD HH:mm')}
                         </div>,
                         <span style={{ fontSize: '13px' }} onClick={onClickReviseComment}>
                             수정하기
                         </span>,
-                        <span style={{ fontSize: '13px' }} onClick={onRemoveComment}>
-                            삭제하기
-                        </span>,
+                        <CommentRemoveBtn onRemoveComment={onRemoveComment(item.id)} />,
+                        ]
+                        : [
+                        <div style={{ fontSize: '13px', marginRight: '10px' }}>
+                            {moment(item.createdAt).format('MM.DD HH:mm')}
+                        </div>,
                         ]}
                         author={item.User.nickname}
-                        avatar={<Link href={`/user/${item.User.id}`} prefetch={false}><a><Avatar>{item.User.nickname[0]}</Avatar></a></Link>}
+                        avatar={(
+                        <Link href={`/user/${item.User.id}`} prefetch={false}>
+                            <a><Avatar>{item.User.nickname[0]}</Avatar></a>
+                        </Link>
+                        )}
                         content={item.content}
                     />
                 </li>
@@ -97,7 +104,6 @@ const CommentEditForm = ({ post, commentData }) => {
 };
 
 CommentEditForm.propTypes = {
-    commentData: PropTypes.array.isRequired,
     post: PropTypes.object.isRequired,
 };
   

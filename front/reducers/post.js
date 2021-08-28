@@ -279,7 +279,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case REMOVE_COMMENT_SUCCESS: {
       draft.removeCommentLoading = false;
       draft.removeCommentDone = true;
-      draft.mainPosts = draft.mainPosts.filter((v) => v.Comments.id !== action.data.id);
+      draft.mainPosts = draft.mainPosts.map((v) => v.Comments.filter((i) => i.id !== action.data.id));
       break;
     }
     case REMOVE_COMMENT_FAILURE:
@@ -306,8 +306,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.reviseCommentError = null;
       break;
     case REVISE_COMMENT_SUCCESS: {
-      const comment = draft.mainPosts.find((v) => v.Comments.id === action.data.id);
-      console.log(comment);
+      const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+      draft.mainPosts = post.Comments.filter((v) => v.id !== action.data.commentId);
       draft.reviseCommentLoading = false;
       draft.reviseCommentDone = true;
       break;

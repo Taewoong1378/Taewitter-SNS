@@ -56,9 +56,11 @@ const sessionOption = {
   resave: false,
   saveUninitialized: false,
   secret: process.env.COOKIE_SECRET,
+  // proxy: true,
   cookie: {
     httpOnly: true,
     secure: false,
+    // secure: true,
     domain: process.env.NODE_ENV === 'production' && '.taewitter.com'
   },
   store: new RedisStore({ client: redisClient }),
