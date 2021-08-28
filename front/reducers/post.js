@@ -1,7 +1,6 @@
 // import shortId from 'shortid';
 // import faker from 'faker';
 
-import { ConsoleSqlOutlined } from '@ant-design/icons';
 import produce from '../util/produce';
 
 export const initialState = {

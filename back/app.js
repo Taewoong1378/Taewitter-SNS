@@ -25,7 +25,6 @@ const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
 const app = express();
-app.set('port', process.env.PORT || 3065);
 sequelize.sync({ force: false })
   .then(() => {
     console.log('db 연결 성공');
@@ -39,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(hpp());
   app.use(cors({
-    origin: ['http://localhost:3000', 'http://taewitter.com'],
+    origin: 'https://taewitter.com',
     credentials: true,
   }));
 } else {
@@ -95,6 +94,6 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
-app.listen(app.get('port'), () => {
+app.listen(3065, () => {
   console.log('서버 실행 중!');
 });
