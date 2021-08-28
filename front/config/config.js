@@ -1,3 +1,2 @@
 // eslint-disable-next-line import/prefer-default-export
-export const backUrl = 'http://api.taewitter.com';
-// export const backUrl = 'http://localhost:3065';
+export const backUrl = process.env.NODE_ENV === 'production' ? 'https://api.nodebird.com' : 'http://localhost:3065';
