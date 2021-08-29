@@ -384,11 +384,10 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.reportPostDone = false;
       draft.reportPostError = null;
       break;
-    case REPORT_POST_SUCCESS: {
+    case REPORT_POST_SUCCESS:
       draft.reportPostLoading = false;
       draft.reportPostDone = true;
       break;
-    }
     case REPORT_POST_FAILURE:
       draft.reportPostLoading = false;
       draft.reportPostError = action.error;

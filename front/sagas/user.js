@@ -23,6 +23,9 @@ import {
   LOG_IN_FAILURE,
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
+  KAKAO_LOGIN_FAILURE,
+  KAKAO_LOGIN_REQUEST,
+  KAKAO_LOGIN_SUCCESS,
   LOG_OUT_FAILURE,
   LOG_OUT_REQUEST,
   LOG_OUT_SUCCESS,
@@ -83,7 +86,6 @@ function logInAPI(data) {
 
 function* logIn(action) {
   try {
-    console.log('saga logIn');
     const result = yield call(logInAPI, action.data);
     yield put({
       type: LOG_IN_SUCCESS,
@@ -93,6 +95,26 @@ function* logIn(action) {
     console.error(err);
     yield put({
       type: LOG_IN_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function kakaologInAPI(data) {
+  return axios.post('/user/kakao', data);
+}
+
+function* kakaologIn(action) {
+  try {
+    const result = yield call(kakaologInAPI, action.data);
+    yield put({
+      type: KAKAO_LOGIN_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: KAKAO_LOGIN_FAILURE,
       error: err.response.data,
     });
   }
@@ -290,6 +312,10 @@ function* watchLogIn() {
   yield takeLatest(LOG_IN_REQUEST, logIn);
 }
 
+function* watchKakaoLogIn() {
+  yield takeLatest(KAKAO_LOGIN_REQUEST, kakaologIn);
+}
+
 function* watchLogOut() {
   yield takeLatest(LOG_OUT_REQUEST, logOut);
 }
@@ -312,6 +338,7 @@ export default function* userSaga() {
     fork(watchFollow),
     fork(watchUnfollow),
     fork(watchLogIn),
+    fork(watchKakaoLogIn),
     fork(watchLogOut),
     fork(watchSignUp),
     fork(watchChangeNickname),

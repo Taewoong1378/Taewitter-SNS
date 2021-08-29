@@ -74,6 +74,16 @@ const PostCard = ({ post }) => {
         setEditMode(false);
     }, []);
 
+    const onRetweet = useCallback(() => {
+        if (!id) {
+            return alert('로그인이 필요합니다');
+        }
+        return dispatch({
+            type: RETWEET_REQUEST,
+            data: post.id,
+        });
+    }, [id]);
+    
     const onRevisePost = useCallback((editText) => () => {
         dispatch({
             type: REVISE_POST_REQUEST,
@@ -84,15 +94,16 @@ const PostCard = ({ post }) => {
         });
     }, [post]);
 
-    const onRetweet = useCallback(() => {
-        if (!id) {
-            return alert('로그인이 필요합니다');
-        }
-        return dispatch({
-            type: RETWEET_REQUEST,
-            data: post.id,
+    const onSubmitReport = useCallback(() => {
+        console.log(id, post.id, reportText);
+        dispatch({
+            type: REPORT_POST_REQUEST,
+            data: {
+                postId: post.id,
+                content: reportText,
+            },
         });
-    }, [id]);
+    }, [reportText]);
 
     const onClickReport = useCallback(() => {
         setModalVisible(true);
@@ -105,17 +116,6 @@ const PostCard = ({ post }) => {
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev);
     }, []);
-
-    const onSubmitReport = useCallback(() => {
-        console.log(id, post.id, reportText);
-        dispatch({
-            type: REPORT_POST_REQUEST,
-            data: {
-                postId: post.id,
-                content: reportText,
-            },
-        });
-    }, [reportText]);
 
     useEffect(() => {
         if (reportPostDone) {
@@ -190,7 +190,7 @@ const PostCard = ({ post }) => {
                             </Link>
                             )}
                         title={post.Retweet.User.nickname}
-                        description={<PostCardContent postData={post.Retweet.content} onCancelRevisePost={onCancelRevisePost} />}
+                        description={<PostCardContent postData={post.Retweet.content} onChangePost={onRevisePost} onCancelRevisePost={onCancelRevisePost} />}
                         />
                     </Card>
                 )

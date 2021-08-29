@@ -9,7 +9,6 @@ module.exports = () => {
   passport.use(new KakaoStrategy({
     clientID: process.env.KAKAO_ID,
     callbackURL: '/user/kakao/callback',
-    // 우리 예제에서는 accessToken과 refreshToken 사용 X
   }, async (accessToken, refreshToken, profile, done) => {
     console.log('kakao profile', profile);
     try {
@@ -24,6 +23,7 @@ module.exports = () => {
           nickname: profile.displayName,
           snsId: profile.id,
           provider: 'kakao',
+          accessToken: accessToken,
         });
         done(null, newUser);
       }

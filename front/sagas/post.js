@@ -343,7 +343,7 @@ function* retweet(action) {
 }
 
 function reportPostAPI(data) {
-  return axios.post(`/post/${data.postId}/report`);
+  return axios.post(`/post/${data.postId}/report`, data);
 }
 
 function* reportPost(action) {

@@ -17,6 +17,9 @@ export const initialState = {
   logInLoading: false, // 로그인 시도중
   logInDone: false,
   logInError: null,
+  kakaologInLoading: false, // 카카오 로그인 시도중
+  kakaologInDone: false,
+  kakaologInError: null,
   logOutLoading: false, // 로그아웃 시도중
   logOutDone: false,
   logOutError: null,
@@ -52,6 +55,10 @@ export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE';
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
 export const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
+
+export const KAKAO_LOGIN_REQUEST = 'KAKAO_LOGIN_REQUEST';
+export const KAKAO_LOGIN_SUCCESS = 'KAKAO_LOGIN_SUCCESS';
+export const KAKAO_LOGIN_FAILURE = 'KAKAO_LOGIN_FAILURE';
 
 export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
@@ -219,6 +226,20 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOG_IN_FAILURE:
       draft.logInLoading = false;
       draft.logInError = action.error;
+      break;
+    case KAKAO_LOGIN_REQUEST:
+      draft.kakaologInLoading = true;
+      draft.kakaologInError = null;
+      draft.kakaologInDone = false;
+      break;
+    case KAKAO_LOGIN_SUCCESS:
+      draft.kakaologInLoading = false;
+      draft.me = action.data.code;
+      draft.kakaologInDone = true;
+      break;
+    case KAKAO_LOGIN_FAILURE:
+      draft.kakaologInLoading = false;
+      draft.kakaologInError = action.error;
       break;
     case LOG_OUT_REQUEST:
       draft.logOutLoading = true;

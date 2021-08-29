@@ -4,10 +4,12 @@ const path = require('path');
 const fs = require('fs');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
+const nodemailer = require('nodemailer');
 
 const { Post, Image, Comment, User, Hashtag, Report } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
+const prod = process.env.NODE_ENV === 'production';
 const router = express.Router();
 
 try {
@@ -354,15 +356,15 @@ router.post('/:postId/report', isLoggedIn, async (req, res, next) => { // POST /
         port: 465,
         secure: true,
         auth: {
-          user: 'ktw2378@korea.ac.kr',
+          user: 'xodndxnxn@gmail.com',
           pass: process.env.GMAIL_PASSWORD,
         },
       });
       await transporter.verify();
       await transporter.sendMail({
-        from: '"SNS 신고내역" <report@nodebird.com>',
-        to: '"SNS 관리자" <ktw2378@korea.ac.kr>',
-        subject: 'NodeBird - 신고 발생',
+        from: '"Taewitter 신고내역" <report@taewitter.com>',
+        to: '"Taewitter 관리자" <xodndxnxn@gmail.com>',
+        subject: 'Taewitter - 신고 발생',
         // nodebird.com/user/emailAuth/:token
         html: `
           <div>
