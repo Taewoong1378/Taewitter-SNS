@@ -9,7 +9,8 @@ const CommentForm = ({ post }) => {
   const dispatch = useDispatch();
 
   const id = useSelector((state) => state.user.me?.id);
-  const { addCommentDone, addCommentLoading } = useSelector((state) => state.post);
+  const addCommentDone = useSelector((state) => state.post.addCommentDone);
+  const addCommentLoading = useSelector((state) => state.post.addCommentLoading);
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
   const FormItem = useMemo(() => ({ position: 'relative', margin: '0' }), []);
   const ButtonStyle = useMemo(() => ({ position: 'absolute', right: '0', bottom: '-40px', zIndex: 1 }), []);

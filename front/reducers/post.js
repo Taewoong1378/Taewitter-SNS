@@ -44,6 +44,9 @@ export const initialState = {
   retweetLoading: false,
   retweetDone: false,
   retweetError: null,
+  reportPostLoading: false,
+  reportPostDone: false,
+  reportPostError: null,
 };
 
 // export const generateDummyPost = (number) => Array(number).fill().map(() => ({
@@ -123,6 +126,10 @@ export const RETWEET_REQUEST = 'RETWEET_REQUEST';
 export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
 export const RETWEET_FAILURE = 'RETWEET_FAILURE';
 
+export const REPORT_POST_REQUEST = 'REPORT_POST_REQUEST';
+export const REPORT_POST_SUCCESS = 'REPORT_POST_SUCCESS';
+export const REPORT_POST_FAILURE = 'REPORT_POST_FAILURE';
+
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
   data,
@@ -182,9 +189,14 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case LIKE_POST_SUCCESS: {
       const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-      post.Likers.push({ id: action.data.UserId });
+      if (post) {
+        post.Likers.push({ id: action.data.UserId });
+      } 
       draft.likePostLoading = false;
       draft.likePostDone = true;
+      if (draft.singlePost?.Likers) {
+        draft.singlePost.Likers.push({ id: action.data.UserId });
+      }
       break;
     }
     case LIKE_POST_FAILURE:
@@ -198,9 +210,15 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case UNLIKE_POST_SUCCESS: {
       const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-      post.Likers = post.Likers.filter((v) => v.id !== action.data.UserId);
+      if (post) {
+        post.Likers = post.Likers.filter((v) => v.id !== action.data.UserId);
+      }
       draft.unlikePostLoading = false;
       draft.unlikePostDone = true;
+      if (draft.singlePost?.Likers) {
+        const index = draft.singlePost.Likers.find((v) => v.id === action.data.UserId);
+        draft.singlePost.Likers.splice(index, 1); 
+      }
       break;
     }
     case UNLIKE_POST_FAILURE:
@@ -277,9 +295,12 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.removeCommentError = null;
       break;
     case REMOVE_COMMENT_SUCCESS: {
+      const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+      if (post) {
+        post.Comments = post.Comments.filter((v) => v.id !== action.data.CommentId);
+      } 
       draft.removeCommentLoading = false;
       draft.removeCommentDone = true;
-      draft.mainPosts = draft.mainPosts.map((v) => v.Comments.filter((i) => i.id !== action.data.id));
       break;
     }
     case REMOVE_COMMENT_FAILURE:
@@ -357,6 +378,20 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case RETWEET_FAILURE:
       draft.retweetLoading = false;
       draft.retweetError = action.error;
+      break;
+    case REPORT_POST_REQUEST:
+      draft.reportPostLoading = true;
+      draft.reportPostDone = false;
+      draft.reportPostError = null;
+      break;
+    case REPORT_POST_SUCCESS: {
+      draft.reportPostLoading = false;
+      draft.reportPostDone = true;
+      break;
+    }
+    case REPORT_POST_FAILURE:
+      draft.reportPostLoading = false;
+      draft.reportPostError = action.error;
       break;
     default:
       break;

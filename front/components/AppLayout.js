@@ -33,7 +33,7 @@ const AppLayout = ({ children }) => {
     // 서버쪽이 없다는 가정하에 더미 데이터로 로그인 구현하기
     const style = useMemo(() => ({ fontSize: '15px', fontWeight: 'bold', marginTop: '28px', textAlign: 'center' }));
     const [searchInput, onChangeSearchInput] = useInput('');
-    const { me } = useSelector((state) => state.user);
+    const me = useSelector((state) => state.user.me);
 
     const onSearch = useCallback(() => {
         Router.push(`/hashtag/${searchInput}`);

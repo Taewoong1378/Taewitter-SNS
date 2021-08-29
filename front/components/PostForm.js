@@ -5,7 +5,8 @@ import { UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../reduce
 import useInput from '../hooks/useInput';
 
 const PostForm = () => {
-    const { imagePaths, addPostDone } = useSelector((state) => state.post);
+    const imagePaths = useSelector((state) => state.post.imagePaths);
+    const addPostDone = useSelector((state) => state.post.addPostDone);
     const dispatch = useDispatch();
     const [text, onChangeText, setText] = useInput('');
     useEffect(() => {

@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import { Button, Card, Popover, Avatar } from 'antd';
+import { Button, Card, Popover, Avatar, Modal, Input } from 'antd';
 import { EllipsisOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, RetweetOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -12,8 +12,11 @@ import CommentForm from './CommentForm';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
 import FollowButton from './FollowButton';
-import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, REVISE_POST_REQUEST } from '../reducers/post';
+import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, RETWEET_REQUEST, REVISE_POST_REQUEST, REPORT_POST_REQUEST } from '../reducers/post';
 import CommentEditForm from './CommentEditForm';
+import useInput from '../hooks/useInput';
+
+const { TextArea } = Input;
 
 // 한글로 바꿔주기
 moment.locale('ko');
@@ -21,8 +24,15 @@ moment.tz.setDefault('Asia/Seoul');
 
 const PostCard = ({ post }) => {
     const dispatch = useDispatch();
-    const { removePostLoading, revisePostDone } = useSelector((state) => state.post);
+    const removePostLoading = useSelector((state) => state.post.removePostLoading);
+    const revisePostDone = useSelector((state) => state.post.revisePostDone);
+
+    const reportPostLoading = useSelector((state) => state.post.reportPostLoading);
+    const reportPostDone = useSelector((state) => state.post.reportPostDone);
+    const reportPostError = useSelector((state) => state.post.reportPostError);
     const [commentFormOpened, setCommentFormOpened] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [reportText, onChangeReportText] = useInput('');
     const [editMode, setEditMode] = useState(false);
     const id = useSelector((state) => state.user.me && state.user.me.id);
 
@@ -84,9 +94,37 @@ const PostCard = ({ post }) => {
         });
     }, [id]);
 
+    const onClickReport = useCallback(() => {
+        setModalVisible(true);
+    });
+
+    const onCloseModal = useCallback(() => {
+        setModalVisible(false);
+    }, []);
+
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev);
     }, []);
+
+    const onSubmitReport = useCallback(() => {
+        console.log(id, post.id, reportText);
+        dispatch({
+            type: REPORT_POST_REQUEST,
+            data: {
+                postId: post.id,
+                content: reportText,
+            },
+        });
+    }, [reportText]);
+
+    useEffect(() => {
+        if (reportPostDone) {
+            setModalVisible(false);
+        }
+        if (reportPostError) {
+            setModalVisible(false);
+        }
+    }, [reportPostDone, reportPostError]);
     
     useEffect(() => {
         if (revisePostDone) {
@@ -116,7 +154,7 @@ const PostCard = ({ post }) => {
                                     <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
                                 </>
                             ) 
-                            : <Button type="danger">신고</Button>}
+                            : <Button onClick={onClickReport} type="danger">신고</Button>}
                         </Button.Group>
                     )}
                     >
@@ -124,8 +162,19 @@ const PostCard = ({ post }) => {
                     </Popover>,
                 ]}
                 title={post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null}
-                extra={<FollowButton post={post} />}
+                extra={id && <FollowButton post={post} />}
             >
+                <Modal
+                    title="신고하기"
+                    visible={modalVisible}
+                    onOk={onSubmitReport}
+                    confirmLoading={reportPostLoading}
+                    onCancel={onCloseModal}
+                >
+                    <form>
+                        <TextArea value={reportText} onChange={onChangeReportText} />
+                    </form>
+                </Modal>
                 {post.RetweetId && post.Retweet
                 ? (
                     <Card

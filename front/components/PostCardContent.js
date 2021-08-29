@@ -10,7 +10,7 @@ const PostCardContent = ({ postData, editMode, onCancelRevisePost, onRevisePost 
   const onReviseText = useCallback((e) => {
     setEditText(e.target.value);
   });
-  const { revisePostLoading } = useSelector((state) => state.post);
+  const revisePostLoading = useSelector((state) => state.post.revisePostLoading);
 
   return ( // 첫 번째 게시글 #해시태그 #해시태그
   <div>

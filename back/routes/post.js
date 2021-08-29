@@ -5,7 +5,7 @@ const fs = require('fs');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 
-const { Post, Image, Comment, User, Hashtag } = require('../models');
+const { Post, Image, Comment, User, Hashtag, Report } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
@@ -326,6 +326,58 @@ router.delete('/:postId/comment', isLoggedIn, async (req, res, next) => {   // D
         next(error);
     }
 });
+
+router.post('/:postId/report', isLoggedIn, async (req, res, next) => { // POST /post/1/comment
+    try {
+      const post = await Post.findOne({
+        where: { id: req.params.postId },
+      });
+      if (!post) {
+        return res.status(403).send('존재하지 않는 게시글입니다.');
+      }
+      const exReport = await Report.findOne({
+        where: {
+          PostId: parseInt(req.params.postId, 10),
+          UserId: req.user.id,
+        }
+      });
+      if (exReport) {
+        return res.status(403).send('이미 신고하셨습니다.');
+      }
+      await Report.create({
+        content: req.body.content,
+        PostId: parseInt(req.params.postId, 10),
+        UserId: req.user.id,
+      });
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: 'ktw2378@korea.ac.kr',
+          pass: process.env.GMAIL_PASSWORD,
+        },
+      });
+      await transporter.verify();
+      await transporter.sendMail({
+        from: '"SNS 신고내역" <report@nodebird.com>',
+        to: '"SNS 관리자" <ktw2378@korea.ac.kr>',
+        subject: 'NodeBird - 신고 발생',
+        // nodebird.com/user/emailAuth/:token
+        html: `
+          <div>
+            <a href="${prod ? 'https://taewitter.com' : 'http://localhost:3060'}/post/${req.params.postId}">신고가 접수되었습니다.</a>
+            <p>${req.body.content}</p>
+          </div>
+        `,
+      });
+      console.log('Mail sent');
+      res.status(201).send('ok');
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  });
 
 router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELETE /post/10
     try {

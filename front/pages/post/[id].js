@@ -12,7 +12,7 @@ import AppLayout from '../../components/AppLayout';
 import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
 
 const Post = () => {
-  const { singlePost } = useSelector((state) => state.post);
+  const singlePost = useSelector((state) => state.post.singlePost);
   const router = useRouter();
   const { id } = router.query;
 

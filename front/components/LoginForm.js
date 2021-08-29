@@ -22,7 +22,8 @@ const FormWrapper = styled(Form)`
 
 const LoginForm = () => {
     const dispatch = useDispatch();
-    const { logInLoading, logInError } = useSelector((state) => state.user);
+    const logInLoading = useSelector((state) => state.user.logInLoading);
+    const logInError = useSelector((state) => state.user.logInError);
     // 커스텀훅으로 중복제거
     const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('');

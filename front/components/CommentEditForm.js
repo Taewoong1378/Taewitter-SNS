@@ -17,16 +17,16 @@ const CommentEditForm = ({ post }) => {
     const onReviseCommentText = useCallback((e) => {
       setEditText(e.target.value);
     });
-    const { reviseCommentLoading } = useSelector((state) => state.post);
+    const reviseCommentLoading = useSelector((state) => state.post.reviseCommentLoading);
 
-    const onReviseComment = useCallback(() => {
+    const onReviseComment = useCallback((CommentId) => () => {
         dispatch({
             type: REVISE_COMMENT_REQUEST,
             data: {
                 content: editText,
                 PostId: post.id,
                 UserId: id,
-                id: post.Comments.id,
+                CommentId,
             },
         });
     }, [editText, id]);

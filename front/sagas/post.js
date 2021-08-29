@@ -46,6 +46,9 @@ import {
   REMOVE_COMMENT_SUCCESS,
   REMOVE_COMMENT_FAILURE,
   REMOVE_COMMENT_REQUEST,
+  REPORT_POST_SUCCESS,
+  REPORT_POST_FAILURE,
+  REPORT_POST_REQUEST,
 } from '../reducers/post';
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
@@ -339,6 +342,25 @@ function* retweet(action) {
   }
 }
 
+function reportPostAPI(data) {
+  return axios.post(`/post/${data.postId}/report`);
+}
+
+function* reportPost(action) {
+  try {
+    const result = yield call(reportPostAPI, action.data);
+    yield put({
+      type: REPORT_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: REPORT_POST_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
 function* watchUploadImages() {
   yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
 }
@@ -395,6 +417,10 @@ function* watchRetweet() {
   yield takeLatest(RETWEET_REQUEST, retweet);
 }
 
+function* watchReportPost() {
+  yield takeLatest(REPORT_POST_REQUEST, reportPost);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchUploadImages),
@@ -411,5 +437,6 @@ export default function* postSaga() {
     fork(watchReviseComment),
     fork(watchAddComment),
     fork(watchRetweet),
+    fork(watchReportPost),
   ]);
 }

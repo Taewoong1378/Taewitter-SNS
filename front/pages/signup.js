@@ -23,7 +23,11 @@ const FormWrapper = styled(Form)`
 
 const Signup = () => {
     const dispatch = useDispatch();
-    const { signUpDone, signUpLoading, signUpError, me } = useSelector((state) => state.user);
+    const signUpDone = useSelector((state) => state.user.signUpDone);
+    const signUpLoading = useSelector((state) => state.user.signUpLoading);
+    const signUpError = useSelector((state) => state.user.signUpError);
+    const me = useSelector((state) => state.user.me);
+
     const inputMargin = useMemo(() => ({ marginBottom: '14px' }), []);
     const contentStyle = useMemo(() => ({ fontWeight: 'bold', color: 'red' }), []);
     const marginTop15 = useMemo(() => ({ marginTop: '15px' }), []);

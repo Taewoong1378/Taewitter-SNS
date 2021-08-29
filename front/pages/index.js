@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import axios from 'axios';
+import { message } from 'antd';
 
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
@@ -12,8 +13,22 @@ import wrapper from '../store/configureStore';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { me } = useSelector((state) => state.user);
-  const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } = useSelector((state) => state.post);
+  const me = useSelector((state) => state.user.me);
+  const mainPosts = useSelector((state) => state.post.mainPosts);
+  const hasMorePosts = useSelector((state) => state.post.hasMorePosts);
+  const loadPostsLoading = useSelector((state) => state.post.loadPostsLoading);
+  const retweetError = useSelector((state) => state.post.retweetError);
+  const reportPostDone = useSelector((state) => state.post.reportPostDone);
+  const reportPostError = useSelector((state) => state.post.reportPostError);
+
+  useEffect(() => {
+    if (reportPostDone) {
+        message.success('신고가 접수되었습니다. 빠른 시일 내에 조치하겠습니다.', 5);
+    }
+    if (reportPostError) {
+        message.error('에러가 발생했습니다. 조금 뒤에 다시 시도하세요.', 5);
+    }
+  }, [reportPostDone, reportPostError]);
 
   useEffect(() => {
     if (retweetError) {

@@ -14,7 +14,9 @@ const Hashtag = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { tag } = router.query;
-  const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
+  const mainPosts = useSelector((state) => state.post.mainPosts);
+  const hasMorePosts = useSelector((state) => state.post.hasMorePosts);
+  const loadPostsLoading = useSelector((state) => state.post.loadPostsLoading);
 
   useEffect(() => {
     const onScroll = () => {

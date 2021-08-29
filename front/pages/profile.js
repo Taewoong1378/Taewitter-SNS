@@ -18,7 +18,7 @@ const fetcher = (url) => axios.get(url, { withCredentials: true }).then((result)
 const Profile = () => {
   // const dispatch = useDispatch();
 
-  const { me } = useSelector((state) => state.user);
+  const me = useSelector((state) => state.user.me);
   const [followersLimit, setFollowersLimit] = useState(3);
   const [followingsLimit, setFollowingsLimit] = useState(3);
   const style = useMemo(() => ({ margin: 20 }), []);

@@ -8,7 +8,8 @@ import { logoutRequestAction } from '../reducers/user';
 const UserProfile = () => {
   const style = useMemo(() => ({ marginTop: '30px' }));
   const dispatch = useDispatch();
-  const { me, logOutLoading } = useSelector((state) => state.user);
+  const me = useSelector((state) => state.user.me);
+  const logOutLoading = useSelector((state) => state.user.logOutLoading);
 
   const onLogOut = useCallback(() => {
     dispatch(logoutRequestAction());
