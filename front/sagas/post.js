@@ -242,7 +242,7 @@ function* removePost(action) {
 }
 
 function removeCommentAPI(data) {
-  return axios.delete(`/post/${data.PostId}/comment`);
+  return axios.delete(`/post/comment/${data.PostId}/${data.id}`);
 }
 
 function* removeComment(action) {

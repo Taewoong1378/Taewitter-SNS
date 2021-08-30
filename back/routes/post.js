@@ -312,17 +312,21 @@ router.patch('/:postId', isLoggedIn, async (req, res, next) => {   // PATCH /pos
 
 // 추가로 이미지 patch 만들어보기
 
-router.delete('/:postId/comment', isLoggedIn, async (req, res, next) => {   // DELETE /post/1/comment
+router.delete('/comment/:postId/:id', isLoggedIn, async (req, res, next) => {   // DELETE /post/comment/1
     try {
-        const comment = await Comment.findOne({ where: { PostId: req.params.postId, UserId: req.user.id } });
+        const comment = await Comment.findOne({ where: { id: parseInt(req.params.id, 10) } 
+        });
+        if(!comment) {
+            return res.status(404).send('댓글이 존재하지 않습니다.');
+        }
         await Comment.destroy({
-            where: { id: comment.id },
+            where: { id: parseInt(req.params.id, 10) },
             include: [{
                 model: User,
                 attributes: ['id', 'nickname'],
             }],
         });
-        res.status(200).json({ id: comment.id, PostId: parseInt(req.params.postId, 10), UserId: req.user.id });
+        res.status(200).json({ id: parseInt(req.params.id, 10), PostId: parseInt(req.params.postId, 10) });
     } catch (error) {
         console.error(error);
         next(error);
@@ -379,7 +383,7 @@ router.post('/:postId/report', isLoggedIn, async (req, res, next) => { // POST /
       console.error(error);
       next(error);
     }
-  });
+});
 
 router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELETE /post/10
     try {
@@ -394,6 +398,6 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELETE /pos
       console.error(error);
       next(error);
     }
-  });
+});
 
 module.exports = router;

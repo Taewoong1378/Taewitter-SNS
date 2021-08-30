@@ -10,7 +10,7 @@ import 'moment-timezone';
 
 const CommentTime = styled.div`
     font-size: 13px;
-    margin-light: 10px;
+    margin-right: 10px;
 `;
 
 const Commentremove = styled.span`

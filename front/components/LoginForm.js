@@ -4,7 +4,8 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 // import Image from 'next/image';
-import { /* KAKAO_LOGIN_REQUEST, */ loginRequestAction } from '../reducers/user';
+// import { KAKAO_LOGIN_REQUEST } from '../reducers/user';
+import { loginRequestAction } from '../reducers/user';
 // import naver from '../public/naver.png';
 // import kakao from '../public/kakao.png';
 

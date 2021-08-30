@@ -21,6 +21,7 @@ const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const hashtagRouter = require('./routes/hashtag');
+// const authRouter = require('./routes/auth');
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
@@ -77,6 +78,7 @@ app.use('/post', postRouter);
 app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 app.use('/hashtag', hashtagRouter);
+// app.use('/auth', authRouter);
 
 // 404처리 미들웨어
 app.use((req, res, next) => {
