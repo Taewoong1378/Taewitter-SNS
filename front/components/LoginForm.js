@@ -20,6 +20,15 @@ const FormWrapper = styled(Form)`
     padding: 10px;
 `;
 
+const Email = styled.div`
+    width: 80%;
+    margin-bottom: 15px;
+`;
+
+const Password = styled.div`
+    width: 80%;
+`;
+
 const LoginForm = () => {
     const dispatch = useDispatch();
     const logInLoading = useSelector((state) => state.user.logInLoading);
@@ -53,7 +62,7 @@ const LoginForm = () => {
 
     return (
         <FormWrapper onFinish={onSubmitForm}>
-            <div>
+            <Email>
                 <label htmlFor="user-email">이메일</label>
                 <br />
                 <Input
@@ -62,10 +71,9 @@ const LoginForm = () => {
                 value={email}
                 onChange={onChangeEmail}
                 required
-                style={{ width: '80%', marginBottom: 15 }}
                 />
-            </div>
-            <div>
+            </Email>
+            <Password>
                 <label htmlFor="user-password">비밀번호</label>
                 <br />
                 <Input
@@ -74,9 +82,8 @@ const LoginForm = () => {
                 value={password}
                 onChange={onChangePassword}
                 required
-                style={{ width: '80%' }}
                 />
-            </div>
+            </Password>
             <ButtonWrapper>
                 <Button type="primary" htmlType="submit" loading={logInLoading}>로그인</Button>
                 <Link href="/signup"><a><Button>회원가입</Button></a></Link>

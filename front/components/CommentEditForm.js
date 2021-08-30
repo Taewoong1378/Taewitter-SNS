@@ -4,8 +4,18 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import styled from 'styled-components';
 import { REMOVE_COMMENT_REQUEST } from '../reducers/post';
 import 'moment-timezone';
+
+const CommentTime = styled.div`
+    font-size: 13px;
+    margin-light: 10px;
+`;
+
+const Commentremove = styled.span`
+    font-size: 13px;
+`;
 
 const CommentEditForm = ({ post }) => {
     const dispatch = useDispatch();
@@ -34,17 +44,17 @@ const CommentEditForm = ({ post }) => {
                     <Comment
                         actions={id && item.User.id === id 
                         ? [
-                        <div style={{ fontSize: '13px', marginRight: '10px' }}>
+                        <CommentTime>
                             {moment(item.createdAt).format('MM.DD HH:mm')}
-                        </div>,
-                        <span style={{ fontSize: '13px' }} onClick={onRemoveComment(item.id)}>
+                        </CommentTime>,
+                        <Commentremove onClick={onRemoveComment(item.id)}>
                             삭제하기
-                        </span>,
+                        </Commentremove>,
                         ]
                         : [
-                        <div style={{ fontSize: '13px', marginRight: '10px' }}>
+                        <CommentTime>
                             {moment(item.createdAt).format('MM.DD HH:mm')}
-                        </div>,
+                        </CommentTime>,
                         ]}
                         author={item.User.nickname}
                         avatar={(

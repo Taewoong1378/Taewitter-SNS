@@ -27,6 +27,7 @@ const Global = createGlobalStyle`
 
 const SearchInput = styled(Input.Search)`
     vertical-align: middle;
+    width: 160px;
 `;
 
 const AppLayout = ({ children }) => {
@@ -51,12 +52,12 @@ const AppLayout = ({ children }) => {
                         <Link href="/profile"><a>내 프로필</a></Link>
                     </Menu.Item>
                     <Menu.Item>
-                        <SearchInput 
-                        enterButton="검색"
+                        <SearchInput
+                        enterButton
                         value={searchInput}
                         onChange={onChangeSearchInput}
                         onSearch={onSearch}
-                        placeholder="해시태그 검색  ex.강태웅"
+                        placeholder="해시태그 검색"
                         />
                     </Menu.Item>
                 </Menu>

@@ -1,12 +1,29 @@
-import React, { useCallback, useRef, useEffect } from 'react';
+import React, { useCallback, useRef, useEffect, useMemo } from 'react';
 import { Form, Input, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 import { UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../reducers/post';
 import useInput from '../hooks/useInput';
+
+const Formstyle = styled(Form)`
+margin: 10px 0 20px;
+`;
+
+const ButtonStyle = styled(Button)`
+    margin-top: 10px;
+`;
+
+const ButtonStyle2 = styled(Button)`
+    margin-top: 10px;
+    float: right;
+`;
 
 const PostForm = () => {
     const imagePaths = useSelector((state) => state.post.imagePaths);
     const addPostDone = useSelector((state) => state.post.addPostDone);
+    const inputStyle = useMemo(() => ({ marginTop: '20px' }), []);
+    const divStyle = useMemo(() => ({ display: 'inline-block' }), []);
+    const imageWidth = useMemo(() => ({ width: '200px' }), []);
     const dispatch = useDispatch();
     const [text, onChangeText, setText] = useInput('');
     useEffect(() => {
@@ -58,9 +75,9 @@ const PostForm = () => {
         });
     });
     return (
-        <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
+        <Formstyle encType="multipart/form-data" onFinish={onSubmit}>
             <Input.TextArea
-                style={{ marginTop: '20px' }}
+                style={inputStyle}
                 value={text}
                 onChange={onChangeText}
                 maxLength={140}
@@ -75,20 +92,20 @@ const PostForm = () => {
                 ref={imageInput} 
                 onChange={onChangeImages}
                 />
-                <Button style={{ marginTop: '10px' }} onClick={onClickImageUpload}>이미지 업로드</Button>
-                <Button type="primary" style={{ marginTop: '10px', float: 'right' }} htmlType="submit">올리기</Button>
+                <ButtonStyle onClick={onClickImageUpload}>이미지 업로드</ButtonStyle>
+                <ButtonStyle2 type="primary" htmlType="submit">올리기</ButtonStyle2>
             </div>
             <div>
                 {imagePaths.map((v, i) => (
-                    <div key={v} style={{ display: 'inline-block' }}>
-                        <img src={v.replace(/\/thumb\//, '/original/')} style={{ width: '200px' }} alt={v} />
+                    <div key={v} style={divStyle}>
+                        <img src={v.replace(/\/thumb\//, '/original/')} style={imageWidth} alt={v} />
                         <div>
                             <Button onClick={onRemoveImage(i)}>제거</Button>
                         </div>
                     </div>
                 ))}
             </div>
-        </Form>
+        </Formstyle>
     );
 };
 

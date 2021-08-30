@@ -23,9 +23,22 @@ const { TextArea } = Input;
 moment.locale('ko');
 moment.tz.setDefault('Asia/Seoul');
 
+const Div = styled.div`
+    margin-top: 30px;
+    margin-bottom: 20px;
+`;
+
 const LikeText = styled.div`
     color: crimson;
     font-size: 14px;
+`;
+
+const RetweetDate = styled.div`
+    float: right;
+`;
+
+const PostDate = styled.div`
+    float: right;
 `;
 
 const PostCard = ({ post }) => {
@@ -140,7 +153,7 @@ const PostCard = ({ post }) => {
 
     const liked = post.Likers.find((v) => v.id === id);
     return (
-        <div style={{ marginTop: 30, marginBottom: 20 }}>
+        <Div>
             <Card
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[
@@ -187,9 +200,9 @@ const PostCard = ({ post }) => {
                     <Card
                     cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}
                     >
-                        <div style={{ float: 'right' }}>
+                        <RetweetDate>
                             {moment(post.createdAt).format('YYYY년 MM월 DD일 HH:mm')}
-                        </div>
+                        </RetweetDate>
                         <Card.Meta 
                             avatar={(
                             <Link href={`/user/${post.Retweet.User.id}`} prefetch={false}>
@@ -203,9 +216,9 @@ const PostCard = ({ post }) => {
                 )
                 : (
                     <>
-                    <div style={{ float: 'right' }}>
+                    <PostDate>
                         {moment(post.createdAt).format('YYYY년 MM월 DD일 HH:mm')}
-                    </div>
+                    </PostDate>
                     <Card.Meta
                     avatar={<Link href={`/user/${post.User.id}`} prefetch={false}><a><Avatar>{post.User.nickname[0]}</Avatar></a></Link>}
                     title={post.User.nickname}
@@ -221,7 +234,7 @@ const PostCard = ({ post }) => {
                     <CommentEditForm post={post} commentData={post.Comments} />
                 </div>
             )}
-        </div>
+        </Div>
     );
 };
 
