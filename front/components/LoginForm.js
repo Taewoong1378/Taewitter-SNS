@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Input, Form } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import Image from 'next/image';
-import { KAKAO_LOGIN_REQUEST, loginRequestAction } from '../reducers/user';
-import naver from '../public/naver.png';
-import kakao from '../public/kakao.png';
+// import Image from 'next/image';
+import { /* KAKAO_LOGIN_REQUEST, */ loginRequestAction } from '../reducers/user';
+// import naver from '../public/naver.png';
+// import kakao from '../public/kakao.png';
 
 import useInput from '../hooks/useInput';
-import { backUrl, KAKAO_AUTH_URL } from '../config/config';
+// import { backUrl, KAKAO_AUTH_URL } from '../config/config';
 
 const ButtonWrapper = styled.div`
     margin-top: 10px;
@@ -24,10 +24,15 @@ const LoginForm = () => {
     const dispatch = useDispatch();
     const logInLoading = useSelector((state) => state.user.logInLoading);
     const logInError = useSelector((state) => state.user.logInError);
-    const code = new URL(window.location.href).searchParams.get('code');
+    
     // 커스텀훅으로 중복제거
     const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('');
+    const [code, setCode] = useState('');
+
+    useEffect(() => {
+        setCode(new URL(window.location.href).searchParams.get('code'));
+    }, [code]); 
 
     useEffect(() => {
         if (logInError) {
@@ -39,12 +44,12 @@ const LoginForm = () => {
         dispatch(loginRequestAction({ email, password }));
     }, [email, password]);
 
-    const onClickKaKao = useCallback(() => {
-        dispatch({
-            type: KAKAO_LOGIN_REQUEST,
-            data: code,
-        });
-    });
+    // const onClickKaKao = useCallback(() => {
+    //     dispatch({
+    //         type: KAKAO_LOGIN_REQUEST,
+    //         data: code,
+    //     });
+    // });
 
     return (
         <FormWrapper onFinish={onSubmitForm}>
@@ -76,7 +81,7 @@ const LoginForm = () => {
                 <Button type="primary" htmlType="submit" loading={logInLoading}>로그인</Button>
                 <Link href="/signup"><a><Button>회원가입</Button></a></Link>
             </ButtonWrapper>
-                <Link href={`${backUrl}/user/naver`}>
+                {/* <Link href={`${backUrl}/user/naver`}>
                     <a>
                         <Image width={180} height={38} src={naver} />
                     </a>
@@ -85,7 +90,7 @@ const LoginForm = () => {
                     <a>
                         <Image width={180} height={38} src={kakao} />
                     </a>
-                </Link><br />
+                </Link><br /> */}
         </FormWrapper>
     );
 };

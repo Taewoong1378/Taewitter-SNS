@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
 import Head from 'next/head';
-import { Input, Checkbox, Button, Popover, Form } from 'antd';
+import { Input, Checkbox, Button, Modal, Form } from 'antd';
 import axios from 'axios';
 import { END } from 'redux-saga';
 import styled from 'styled-components';
@@ -21,24 +21,34 @@ const FormWrapper = styled(Form)`
     margin-top: 10px;
 `;
 
+const ButtonMargin = styled(Button)`
+    margin-top: 15px;
+`;
+
+const Font = styled.span`
+    color: red;
+    font-weight: bold;
+`;
+
+const BeforeMain = styled.div`
+    text-align: center;
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
+`;
+
 const Signup = () => {
     const dispatch = useDispatch();
     const signUpDone = useSelector((state) => state.user.signUpDone);
     const signUpLoading = useSelector((state) => state.user.signUpLoading);
     const signUpError = useSelector((state) => state.user.signUpError);
     const me = useSelector((state) => state.user.me);
-
+    
     const inputMargin = useMemo(() => ({ marginBottom: '14px' }), []);
-    const contentStyle = useMemo(() => ({ fontWeight: 'bold', color: 'red' }), []);
+    // const contentStyle = useMemo(() => ({ fontWeight: 'bold', color: 'red' }), []);
     const marginTop15 = useMemo(() => ({ marginTop: '15px' }), []);
     const marginTop10 = useMemo(() => ({ marginTop: '10px' }), []);
 
-    useEffect(() => {
-        if ((me && me.id)) {
-            Router.replace('/');
-        }
-    }, [me && me.id]);
-    
     useEffect(() => {
         if (signUpError) {
             alert(signUpError);
@@ -52,15 +62,23 @@ const Signup = () => {
         }
     }, [signUpDone]);
 
+    useEffect(() => {
+        if ((me && me.id)) {
+            alert('로그인이 돼 메인페이지로 이동합니다.');
+            Router.replace('/');
+        }
+    }, [me && me.id]);
+    
     const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('');
     const [nickname, onChangeNickname] = useInput('');
-
+    
     // 비밀번호 체크는 조금 다른 부분이 있음
     const [passwordCheck, setPasswordCheck] = useState('');
     const [passwordError, setPasswordError] = useState(false);
     const [term, setTerm] = useState('');
     const [termError, setTermError] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     
     const onSubmit = useCallback(() => {
         if (password !== passwordCheck) {
@@ -92,13 +110,26 @@ const Signup = () => {
         setTerm(e.target.checked);
         setTermError(false);
     }, []);
-    
-    const content = '강태웅과 오래오래 잘 지낸다!';
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
     return (
         <AppLayout>
             <Head>
                 <title>회원가입 | Nodebird</title>
             </Head>
+            {me?.id
+            ? <BeforeMain>메인 페이지로 이동 중입니다. 잠시만 기다려주세요</BeforeMain>
+            : (
             <FormWrapper
                 onFinish={onSubmit}
             >
@@ -157,14 +188,23 @@ const Signup = () => {
                         checked={term} 
                         onChange={onChangeTerm}
                     >
-                        다음 <Popover content={content}><span style={contentStyle}>항목</span></Popover>들에 대해 동의합니다.
+                    <Font onClick={showModal}>
+                        약관을 확인하려면 눌러주세요
+                    </Font>
+                    <Modal title="약관 내용" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                        <p>강태웅과 사이좋게 지낸다!</p>
+                        <p>강태웅과 자주 연락한다!</p>
+                        <p>강태웅과 자주 놀아준다!</p>
+                        <p>강태웅에게 밥을 자주 사준다!</p>
+                    </Modal>
                     </Checkbox>
                     {termError && <ErrorMessage>약관에 동의하셔야합니다.</ErrorMessage>}
                 </div>
                 <div style={marginTop10}>
-                    <Button type="primary" htmlType="submit" loading={signUpLoading}>가입하기</Button>
+                    <ButtonMargin type="primary" htmlType="submit" loading={signUpLoading}>가입하기</ButtonMargin>
                 </div>
             </FormWrapper>
+          )}
         </AppLayout>
     );
 };

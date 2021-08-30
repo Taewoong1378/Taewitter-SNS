@@ -23,9 +23,9 @@ import {
   LOG_IN_FAILURE,
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
-  KAKAO_LOGIN_FAILURE,
-  KAKAO_LOGIN_REQUEST,
-  KAKAO_LOGIN_SUCCESS,
+  // KAKAO_LOGIN_FAILURE,
+  // KAKAO_LOGIN_REQUEST,
+  // KAKAO_LOGIN_SUCCESS,
   LOG_OUT_FAILURE,
   LOG_OUT_REQUEST,
   LOG_OUT_SUCCESS,
@@ -100,25 +100,25 @@ function* logIn(action) {
   }
 }
 
-function kakaologInAPI(data) {
-  return axios.post('/user/kakao', data);
-}
+// function kakaologInAPI(data) {
+//   return axios.get(`/user/kakao/callback?code=${data.code}`);
+// }
 
-function* kakaologIn(action) {
-  try {
-    const result = yield call(kakaologInAPI, action.data);
-    yield put({
-      type: KAKAO_LOGIN_SUCCESS,
-      data: result.data,
-    });
-  } catch (err) {
-    console.error(err);
-    yield put({
-      type: KAKAO_LOGIN_FAILURE,
-      error: err.response.data,
-    });
-  }
-}
+// function* kakaologIn(action) {
+//   try {
+//     const result = yield call(kakaologInAPI, action.data);
+//     yield put({
+//       type: KAKAO_LOGIN_SUCCESS,
+//       data: result.data,
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     yield put({
+//       type: KAKAO_LOGIN_FAILURE,
+//       error: err.response.data,
+//     });
+//   }
+// }
 
 function logOutAPI() {
   return axios.post('/user/logout');
@@ -312,9 +312,9 @@ function* watchLogIn() {
   yield takeLatest(LOG_IN_REQUEST, logIn);
 }
 
-function* watchKakaoLogIn() {
-  yield takeLatest(KAKAO_LOGIN_REQUEST, kakaologIn);
-}
+// function* watchKakaoLogIn() {
+//   yield takeLatest(KAKAO_LOGIN_REQUEST, kakaologIn);
+// }
 
 function* watchLogOut() {
   yield takeLatest(LOG_OUT_REQUEST, logOut);
@@ -338,7 +338,7 @@ export default function* userSaga() {
     fork(watchFollow),
     fork(watchUnfollow),
     fork(watchLogIn),
-    fork(watchKakaoLogIn),
+    // fork(watchKakaoLogIn),
     fork(watchLogOut),
     fork(watchSignUp),
     fork(watchChangeNickname),

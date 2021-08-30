@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import 'moment-timezone';
 
+import styled from 'styled-components';
 import CommentForm from './CommentForm';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
@@ -21,6 +22,11 @@ const { TextArea } = Input;
 // 한글로 바꿔주기
 moment.locale('ko');
 moment.tz.setDefault('Asia/Seoul');
+
+const LikeText = styled.div`
+    color: crimson;
+    font-size: 14px;
+`;
 
 const PostCard = ({ post }) => {
     const dispatch = useDispatch();
@@ -138,10 +144,11 @@ const PostCard = ({ post }) => {
             <Card
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[
-                    <RetweetOutlined key="retweet" onClick={onRetweet} />,
+                    <LikeText>하트 {post.Likers.length || 0}개</LikeText>,
                     liked
-                        ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} />
+                        ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onUnlike} /> 
                         : <HeartOutlined key="heart" onClick={onLike} />,
+                    <RetweetOutlined key="retweet" onClick={onRetweet} />,
                     <MessageOutlined key="comment" onClick={onToggleComment} />,
                     <Popover 
                         key="more" 

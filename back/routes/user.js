@@ -296,16 +296,15 @@ router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.get('/kakao', passport.authenticate('kakao'));
-
-router.get('/kakao/callback', passport.authenticate('kakao', {
-  failureRedirect: process.env.NODE_ENV === 'production' ? 'https://taewitter.com' : 'http://localhost:3060',
-}), (req, res) => {
-  console.log(req.user.nickname);
-  console.log(req.user.accessToken);
-  res.status(200).json({ nickname: req.user.nickname, accessToken: req.user.accessToken });
-  res.redirect(process.env.NODE_ENV === 'production' ? 'https://taewitter.com' : 'http://localhost:3060');
-});
+// router.get('/kakao/callback/code', passport.authenticate('kakao', {
+//   failureRedirect: process.env.NODE_ENV === 'production' ? 'https://taewitter.com' : 'http://localhost:3060',
+// }), (req, res) => {
+//   console.log(req.user.nickname);
+//   console.log(req.query.code);
+//   console.log(req.user.accessToken);
+//   res.status(200).json({ nickname: req.user.nickname, accessToken: req.user.accessToken });
+//   res.redirect(process.env.NODE_ENV === 'production' ? 'https://taewitter.com' : 'http://localhost:3060');
+// });
 
 // router.get('/naver', passport.authenticate('naver'));
 

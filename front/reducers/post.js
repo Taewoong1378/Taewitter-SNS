@@ -32,9 +32,6 @@ export const initialState = {
   revisePostLoading: false,
   revisePostDone: false,
   revisePosttError: null,
-  reviseCommentLoading: false,
-  reviseCommentDone: false,
-  reviseCommentError: null,
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
@@ -113,10 +110,6 @@ export const REMOVE_COMMENT_FAILURE = 'REMOVE_COMMENT_FAILURE';
 export const REVISE_POST_REQUEST = 'REVISE_POST_REQUEST';
 export const REVISE_POST_SUCCESS = 'REVISE_POST_SUCCESS';
 export const REVISE_POST_FAILURE = 'REVISE_POST_FAILURE';
-
-export const REVISE_COMMENT_REQUEST = 'REVISE_COMMENT_REQUEST';
-export const REVISE_COMMENT_SUCCESS = 'REVISE_COMMENT_SUCCESS';
-export const REVISE_COMMENT_FAILURE = 'REVISE_COMMENT_FAILURE';
 
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
@@ -296,9 +289,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       break;
     case REMOVE_COMMENT_SUCCESS: {
       const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-      if (post) {
-        post.Comments = post.Comments.filter((v) => v.id !== action.data.CommentId);
-      } 
+      post.Comments = post.Comments.filter((v) => v.id !== action.data.id);
       draft.removeCommentLoading = false;
       draft.removeCommentDone = true;
       break;
@@ -320,22 +311,6 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case REVISE_POST_FAILURE:
       draft.revisePostLoading = false;
       draft.revisePostError = action.error;
-      break;
-    case REVISE_COMMENT_REQUEST:
-      draft.reviseCommentLoading = true;
-      draft.reviseCommentDone = false;
-      draft.reviseCommentError = null;
-      break;
-    case REVISE_COMMENT_SUCCESS: {
-      const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-      draft.mainPosts = post.Comments.filter((v) => v.id !== action.data.commentId);
-      draft.reviseCommentLoading = false;
-      draft.reviseCommentDone = true;
-      break;
-    }
-    case REVISE_COMMENT_FAILURE:
-      draft.reviseCommentLoading = false;
-      draft.reviseCommentError = action.error;
       break;
     case ADD_COMMENT_REQUEST:
       draft.addCommentLoading = true;

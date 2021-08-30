@@ -40,9 +40,6 @@ import {
   UPLOAD_IMAGES_FAILURE,
   UPLOAD_IMAGES_REQUEST, 
   UPLOAD_IMAGES_SUCCESS,
-  REVISE_COMMENT_SUCCESS,
-  REVISE_COMMENT_FAILURE,
-  REVISE_COMMENT_REQUEST,
   REMOVE_COMMENT_SUCCESS,
   REMOVE_COMMENT_FAILURE,
   REMOVE_COMMENT_REQUEST,
@@ -284,26 +281,6 @@ function* revisePost(action) {
   }
 }
 
-function reviseCommentAPI(data) {
-  return axios.patch(`/post/${data.PostId}/comment`, data);
-}
-
-function* reviseComment(action) {
-  try {
-    const result = yield call(reviseCommentAPI, action.data);
-    yield put({
-      type: REVISE_COMMENT_SUCCESS,
-      data: result.data,
-    });
-  } catch (err) {
-    console.error(err);
-    yield put({
-      type: REVISE_COMMENT_FAILURE,
-      error: err.response.data,
-    });
-  }
-}
-
 function addCommentAPI(data) {
   return axios.post(`/post/${data.postId}/comment`, data);
 }
@@ -405,10 +382,6 @@ function* watchRevisePost() {
   yield takeLatest(REVISE_POST_REQUEST, revisePost);
 }
 
-function* watchReviseComment() {
-  yield takeLatest(REVISE_COMMENT_REQUEST, reviseComment);
-}
-
 function* watchAddComment() {
   yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
@@ -434,7 +407,6 @@ export default function* postSaga() {
     fork(watchRemovePost),
     fork(watchRemoveComment),
     fork(watchRevisePost),
-    fork(watchReviseComment),
     fork(watchAddComment),
     fork(watchRetweet),
     fork(watchReportPost),
