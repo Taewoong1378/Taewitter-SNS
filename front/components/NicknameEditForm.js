@@ -14,12 +14,20 @@ const FormStyle = styled(Form)`
 
 const NicknameEditForm = () => {
     const changeNicknameDone = useSelector((state) => state.user.changeNicknameDone);
+    const changeNicknameError = useSelector((state) => state.user.changeNicknameError);
     const me = useSelector((state) => state.user.me);
     const [nickname, onChangeNickname, setNickname] = useInput(me?.nickname || '');
     const dispatch = useDispatch();
   
     useEffect(() => {
+      if (changeNicknameError) {
+          alert(changeNicknameError);
+      }
+    }, [changeNicknameError]);   
+    
+    useEffect(() => {
         if (changeNicknameDone) {
+            alert('닉네임을 변경했습니다');
             setNickname('');
         }
     }, [changeNicknameDone]);

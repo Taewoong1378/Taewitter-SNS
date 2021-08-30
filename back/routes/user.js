@@ -202,8 +202,8 @@ router.post('/', isNotLoggedIn, async (req, res, next) => {    // POST /user
             }
         });
         if (exUser) {
-            if (typeof window !== 'undefined') { alert('이미 사용중인 아이디입니다.') }
-            return res.status(403).send('이미 사용중인 아이디입니다.');
+            if (typeof window !== 'undefined') { alert('이미 사용중인 이메일입니다.') }
+            return res.status(403).send('이미 사용중인 이메일입니다.');
         }
         if (exNick) {
           if (typeof window !== 'undefined') { alert('이미 사용중인 닉네임입니다.') }
@@ -230,6 +230,15 @@ router.post('/logout', isLoggedIn, (req, res, next) => {
 
 router.patch('/nickname', async (req, res, next) => {
   try {
+    const nickname = await User.findOne({
+      where: {
+          nickname: req.body.nickname,
+      }
+    });
+    if (nickname) {
+      if (typeof window !== 'undefined') { alert('이미 사용중인 닉네임입니다.') }
+      return res.status(403).send('이미 사용중인 닉네임입니다.');
+    }
     await User.update({
       nickname: req.body.nickname,
     }, {
