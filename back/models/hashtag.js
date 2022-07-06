@@ -2,23 +2,26 @@ const Sequelize = require('sequelize');
 
 module.exports = class Hashtag extends Sequelize.Model {
   static init(sequelize) {
-    return super.init({
-      name: {
-        // 해시태그 이름만 생성
-        type: Sequelize.STRING(20),
-        allowNull: false,
-        unique: true,
+    return super.init(
+      {
+        name: {
+          // 해시태그 이름만 생성
+          type: Sequelize.STRING(20),
+          allowNull: false,
+          unique: true,
+        },
       },
-    }, {
-      sequelize,
-      timestamps: true,
-      underscored: false,
-      modelName: 'Hashtag',
-      tableName: 'hashtags',
-      paranoid: false,
-      charset: 'utf8mb4',
-      collate: 'utf8mb4_general_ci',
-    });
+      {
+        sequelize,
+        timestamps: true,
+        underscored: false,
+        modelName: 'Hashtag',
+        tableName: 'hashtags',
+        paranoid: false,
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_general_ci',
+      },
+    );
   }
 
   static associate(db) {
@@ -26,4 +29,3 @@ module.exports = class Hashtag extends Sequelize.Model {
     db.Hashtag.belongsToMany(db.Post, { through: 'PostHashtag' });
   }
 };
-

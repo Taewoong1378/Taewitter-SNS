@@ -26,7 +26,8 @@ const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
 const app = express();
-sequelize.sync({ force: false })
+sequelize
+  .sync({ force: false })
   .then(() => {
     console.log('db 연결 성공');
   })
@@ -38,16 +39,20 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(hpp());
-  app.use(cors({
-    origin: 'https://taewitter.com',
-    credentials: true,
-  }));
+  app.use(
+    cors({
+      origin: 'https://taewitter.com',
+      credentials: true,
+    }),
+  );
 } else {
   app.use(morgan('dev'));
-  app.use(cors({
-    origin: true,
-    credentials: true,
-  }));
+  app.use(
+    cors({
+      origin: true,
+      credentials: true,
+    }),
+  );
 }
 app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
@@ -62,7 +67,7 @@ const sessionOption = {
     httpOnly: true,
     secure: false,
     // secure: true,
-    domain: process.env.NODE_ENV === 'production' && '.taewitter.com'
+    domain: process.env.NODE_ENV === 'production' && '.taewitter.com',
   },
   store: new RedisStore({ client: redisClient }),
 };
@@ -82,7 +87,7 @@ app.use('/hashtag', hashtagRouter);
 
 // 404처리 미들웨어
 app.use((req, res, next) => {
-  const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
   error.status = 404;
   logger.info('hello');
   logger.error(error.message);
