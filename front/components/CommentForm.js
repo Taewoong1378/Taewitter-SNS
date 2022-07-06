@@ -10,17 +10,22 @@ const CommentForm = ({ post }) => {
 
   const id = useSelector((state) => state.user.me?.id);
   const addCommentDone = useSelector((state) => state.post.addCommentDone);
-  const addCommentLoading = useSelector((state) => state.post.addCommentLoading);
+  const addCommentLoading = useSelector(
+    (state) => state.post.addCommentLoading,
+  );
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
   const FormItem = useMemo(() => ({ position: 'relative', margin: '0' }), []);
-  const ButtonStyle = useMemo(() => ({ position: 'absolute', right: '0', bottom: '-40px', zIndex: 1 }), []);
+  const ButtonStyle = useMemo(
+    () => ({ position: 'absolute', right: '0', bottom: '-40px', zIndex: 1 }),
+    [],
+  );
 
   useEffect(() => {
     if (addCommentDone) {
-        setCommentText('');
+      setCommentText('');
     }
   }, [addCommentDone]);
-  
+
   const onSubmitComment = useCallback(() => {
     console.log(id, post.id, commentText);
     dispatch({
@@ -28,27 +33,26 @@ const CommentForm = ({ post }) => {
       data: { content: commentText, postId: post.id, userId: id },
     });
   }, [commentText, id]);
-  
+
   return (
-      <>
-        <Form onFinish={onSubmitComment}>
-          <Form.Item style={FormItem}>
-            <Input.TextArea 
-            rows={4} 
+    <>
+      <Form onFinish={onSubmitComment}>
+        <Form.Item style={FormItem}>
+          <Input.TextArea
+            rows={4}
             value={commentText}
-            onChange={onChangeCommentText} 
-            />
-            <Button 
-            style={ButtonStyle} 
-            type="primary" 
-            htmlType="submit"
-            loading={addCommentLoading}
-            >
-              게시
-            </Button>
-          </Form.Item>
-        </Form>
-      </>
+            onChange={onChangeCommentText}
+          />
+          <Button
+            style={ButtonStyle}
+            type='primary'
+            htmlType='submit'
+            loading={addCommentLoading}>
+            게시
+          </Button>
+        </Form.Item>
+      </Form>
+    </>
   );
 };
 

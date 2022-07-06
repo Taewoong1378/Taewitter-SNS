@@ -20,11 +20,16 @@ const Hashtag = () => {
 
   useEffect(() => {
     const onScroll = () => {
-      if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+      if (
+        window.pageYOffset + document.documentElement.clientHeight >
+        document.documentElement.scrollHeight - 300
+      ) {
         if (hasMorePosts && !loadPostsLoading) {
           dispatch({
             type: LOAD_HASHTAG_POSTS_REQUEST,
-            lastId: mainPosts[mainPosts.length - 1] && mainPosts[mainPosts.length - 1].id,
+            lastId:
+              mainPosts[mainPosts.length - 1] &&
+              mainPosts[mainPosts.length - 1].id,
             data: tag,
           });
         }
@@ -45,24 +50,26 @@ const Hashtag = () => {
   );
 };
 
-export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  console.log(context);
-  const cookie = context.req ? context.req.headers.cookie : '';
-  console.log(context);
-  axios.defaults.headers.Cookie = '';
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
-  }
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_HASHTAG_POSTS_REQUEST,
-    data: context.params.tag,
-  });
-  context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
-  return { props: {} };
-});
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    console.log(context);
+    const cookie = context.req ? context.req.headers.cookie : '';
+    console.log(context);
+    axios.defaults.headers.Cookie = '';
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
+    context.store.dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+    context.store.dispatch({
+      type: LOAD_HASHTAG_POSTS_REQUEST,
+      data: context.params.tag,
+    });
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+    return { props: {} };
+  },
+);
 
 export default Hashtag;

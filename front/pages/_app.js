@@ -11,23 +11,23 @@ import wrapper from '../store/configureStore';
 
 // 만약 body가 아니라 Head를 수정하고 싶다면 next에서 제공하는 Head 컴포넌트를 가져와서 사용하면 된다. 수정하는 Head가 만약 전체에 적용되는거면 _app.js에서, 일부에만 적용되는거라면 AppLayout.js에서 사용하면된다.
 const App = ({ Component }) => (
-        <>  
-            <Head>
-                <meta charset="utf-8" />
-                <title>SNS Service</title>
-            </Head>      
-            <Component />  
-        </>
+  <>
+    <Head>
+      <meta charset='utf-8' />
+      <title>SNS Service</title>
+    </Head>
+    <Component />
+  </>
 );
 
 App.propTypes = {
-    Component: PropTypes.elementType.isRequired,
+  Component: PropTypes.elementType.isRequired,
 };
 
 // PropTypes는 부모로부터 전달받은 prop의 데이터 type을 검사한다. 자식 컴포넌트에서 명시해 놓은 데이터 타입과 부모로부터 넘겨받은 데이터 타입이 일치하지 않으면 콘솔에 에러 경고문이 띄워진다.
 
 export function reportWebVitals(metric) {
-    console.log(metric);
-}  
+  console.log(metric);
+}
 
 export default wrapper.withRedux(App);

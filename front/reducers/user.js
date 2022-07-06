@@ -113,178 +113,183 @@ export const logoutRequestAction = () => ({
   type: LOG_OUT_REQUEST,
 });
 
-const reducer = (state = initialState, action) => produce(state, (draft) => {
-  switch (action.type) {
-    case REMOVE_FOLLOWER_REQUEST:
-      draft.removeFollowerLoading = true;
-      draft.removeFollowerError = null;
-      draft.removeFollowerDone = false;
-      break;
-    case REMOVE_FOLLOWER_SUCCESS:
-      draft.removeFollowerLoading = false;
-      draft.me.Followers = draft.me.Followers.filter((v) => v.id !== action.data.UserId);
-      draft.removeFollowerDone = true;
-      break;
-    case REMOVE_FOLLOWER_FAILURE:
-      draft.removeFollowerLoading = false;
-      draft.removeFollowerError = action.error;
-      break;
-    case LOAD_FOLLOWINGS_REQUEST:
-      draft.loadFollowingsLoading = true;
-      draft.loadFollowingsError = null;
-      draft.loadFollowingsDone = false;
-      break;
-    case LOAD_FOLLOWINGS_SUCCESS:
-      draft.loadFollowingsLoading = false;
-      draft.me.Followings = action.data;
-      draft.loadFollowingsDone = true;
-      break;
-    case LOAD_FOLLOWINGS_FAILURE:
-      draft.loadFollowingsLoading = false;
-      draft.loadFollowingsError = action.error;
-      break;
-    case LOAD_FOLLOWERS_REQUEST:
-      draft.loadFollowersLoading = true;
-      draft.loadFollowersError = null;
-      draft.loadFollowersDone = false;
-      break;
-    case LOAD_FOLLOWERS_SUCCESS:
-      draft.loadFollowersLoading = false;
-      draft.me.Followers = action.data;
-      draft.loadFollowersDone = true;
-      break;
-    case LOAD_FOLLOWERS_FAILURE:
-      draft.loadFollowersLoading = false;
-      draft.loadFollowersError = action.error;
-      break;
-    case LOAD_MY_INFO_REQUEST:
-      draft.loadMyInfoLoading = true;
-      draft.loadMyInfoError = null;
-      draft.loadMyInfoDone = false;
-      break;
-    case LOAD_MY_INFO_SUCCESS:
-      draft.loadMyInfoLoading = false;
-      draft.me = action.data;
-      draft.loadMyInfoDone = true;
-      break;
-    case LOAD_MY_INFO_FAILURE:
-      draft.loadMyInfoLoading = false;
-      draft.loadMyInfoError = action.error;
-      break;          
-    case LOAD_USER_REQUEST:
-      draft.loadUserLoading = true;
-      draft.loadUserError = null;
-      draft.loadUserDone = false;
-      break;
-    case LOAD_USER_SUCCESS:
-      draft.loadUserLoading = false;
-      draft.userInfo = action.data;
-      draft.loadUserDone = true;
-      break;
-    case LOAD_USER_FAILURE:
-      draft.loadUserLoading = false;
-      draft.loadUserError = action.error;
-      break;    
-    case FOLLOW_REQUEST:
-      draft.followLoading = true;
-      draft.followError = null;
-      draft.followDone = false;
-      break;
-    case FOLLOW_SUCCESS:
-      draft.followLoading = false;
-      draft.me.Followings.push({ id: action.data.UserId });
-      draft.followDone = true;
-      break;
-    case FOLLOW_FAILURE:
-      draft.followLoading = false;
-      draft.followError = action.error;
-      break;
-    case UNFOLLOW_REQUEST:
-      draft.unfollowLoading = true;
-      draft.unfollowError = null;
-      draft.unfollowDone = false;
-      break;
-    case UNFOLLOW_SUCCESS:
-      draft.unfollowLoading = false;
-      draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data.UserId);
-      draft.unfollowDone = true;
-      break;
-    case UNFOLLOW_FAILURE:
-      draft.unfollowLoading = false;
-      draft.unfollowError = action.error;
-      break;
-    case LOG_IN_REQUEST:
-      draft.logInLoading = true;
-      draft.logInError = null;
-      draft.logInDone = false;
-      break;
-    case LOG_IN_SUCCESS:
-      draft.logInLoading = false;
-      draft.me = action.data;
-      draft.logInDone = true;
-      break;
-    case LOG_IN_FAILURE:
-      draft.logInLoading = false;
-      draft.logInError = action.error;
-      break;
-    // case KAKAO_LOGIN_REQUEST:
-    //   draft.kakaologInLoading = true;
-    //   draft.kakaologInError = null;
-    //   draft.kakaologInDone = false;
-    //   break;
-    // case KAKAO_LOGIN_SUCCESS:
-    //   draft.kakaologInLoading = false;
-    //   draft.me = action.data.code;
-    //   draft.kakaologInDone = true;
-    //   break;
-    // case KAKAO_LOGIN_FAILURE:
-    //   draft.kakaologInLoading = false;
-    //   draft.kakaologInError = action.error;
-    //   break;
-    case LOG_OUT_REQUEST:
-      draft.logOutLoading = true;
-      draft.logOutError = null;
-      draft.logOutDone = false;
-      break;
-    case LOG_OUT_SUCCESS:
-      draft.logOutLoading = false;
-      draft.logOutDone = true;
-      draft.me = null;
-      break;
-    case LOG_OUT_FAILURE:
-      draft.logOutLoading = false;
-      draft.logOutError = action.error;
-      break;
-    case SIGN_UP_REQUEST:
-      draft.signUpLoading = true;
-      draft.signUpError = null;
-      draft.signUpDone = false;
-      break;
-    case SIGN_UP_SUCCESS:
-      draft.signUpLoading = false;
-      draft.signUpDone = true;
-      break;
-    case SIGN_UP_FAILURE:
-      draft.signUpLoading = false;
-      draft.signUpError = action.error;
-      break;
-    case CHANGE_NICKNAME_REQUEST:
-      draft.changeNicknameLoading = true;
-      draft.changeNicknameError = null;
-      draft.changeNicknameDone = false;
-      break;
-    case CHANGE_NICKNAME_SUCCESS:
-      draft.me.nickname = action.data.nickname;
-      draft.changeNicknameLoading = false;
-      draft.changeNicknameDone = true;
-      break;
-    case CHANGE_NICKNAME_FAILURE:
-      draft.changeNicknameLoading = false;
-      draft.changeNicknameError = action.error;
-      break;
-    case ADD_POST_TO_ME:
-      draft.me.Posts.unshift({ id: action.data });
-      break;
+const reducer = (state = initialState, action) =>
+  produce(state, (draft) => {
+    switch (action.type) {
+      case REMOVE_FOLLOWER_REQUEST:
+        draft.removeFollowerLoading = true;
+        draft.removeFollowerError = null;
+        draft.removeFollowerDone = false;
+        break;
+      case REMOVE_FOLLOWER_SUCCESS:
+        draft.removeFollowerLoading = false;
+        draft.me.Followers = draft.me.Followers.filter(
+          (v) => v.id !== action.data.UserId,
+        );
+        draft.removeFollowerDone = true;
+        break;
+      case REMOVE_FOLLOWER_FAILURE:
+        draft.removeFollowerLoading = false;
+        draft.removeFollowerError = action.error;
+        break;
+      case LOAD_FOLLOWINGS_REQUEST:
+        draft.loadFollowingsLoading = true;
+        draft.loadFollowingsError = null;
+        draft.loadFollowingsDone = false;
+        break;
+      case LOAD_FOLLOWINGS_SUCCESS:
+        draft.loadFollowingsLoading = false;
+        draft.me.Followings = action.data;
+        draft.loadFollowingsDone = true;
+        break;
+      case LOAD_FOLLOWINGS_FAILURE:
+        draft.loadFollowingsLoading = false;
+        draft.loadFollowingsError = action.error;
+        break;
+      case LOAD_FOLLOWERS_REQUEST:
+        draft.loadFollowersLoading = true;
+        draft.loadFollowersError = null;
+        draft.loadFollowersDone = false;
+        break;
+      case LOAD_FOLLOWERS_SUCCESS:
+        draft.loadFollowersLoading = false;
+        draft.me.Followers = action.data;
+        draft.loadFollowersDone = true;
+        break;
+      case LOAD_FOLLOWERS_FAILURE:
+        draft.loadFollowersLoading = false;
+        draft.loadFollowersError = action.error;
+        break;
+      case LOAD_MY_INFO_REQUEST:
+        draft.loadMyInfoLoading = true;
+        draft.loadMyInfoError = null;
+        draft.loadMyInfoDone = false;
+        break;
+      case LOAD_MY_INFO_SUCCESS:
+        draft.loadMyInfoLoading = false;
+        draft.me = action.data;
+        draft.loadMyInfoDone = true;
+        break;
+      case LOAD_MY_INFO_FAILURE:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoError = action.error;
+        break;
+      case LOAD_USER_REQUEST:
+        draft.loadUserLoading = true;
+        draft.loadUserError = null;
+        draft.loadUserDone = false;
+        break;
+      case LOAD_USER_SUCCESS:
+        draft.loadUserLoading = false;
+        draft.userInfo = action.data;
+        draft.loadUserDone = true;
+        break;
+      case LOAD_USER_FAILURE:
+        draft.loadUserLoading = false;
+        draft.loadUserError = action.error;
+        break;
+      case FOLLOW_REQUEST:
+        draft.followLoading = true;
+        draft.followError = null;
+        draft.followDone = false;
+        break;
+      case FOLLOW_SUCCESS:
+        draft.followLoading = false;
+        draft.me.Followings.push({ id: action.data.UserId });
+        draft.followDone = true;
+        break;
+      case FOLLOW_FAILURE:
+        draft.followLoading = false;
+        draft.followError = action.error;
+        break;
+      case UNFOLLOW_REQUEST:
+        draft.unfollowLoading = true;
+        draft.unfollowError = null;
+        draft.unfollowDone = false;
+        break;
+      case UNFOLLOW_SUCCESS:
+        draft.unfollowLoading = false;
+        draft.me.Followings = draft.me.Followings.filter(
+          (v) => v.id !== action.data.UserId,
+        );
+        draft.unfollowDone = true;
+        break;
+      case UNFOLLOW_FAILURE:
+        draft.unfollowLoading = false;
+        draft.unfollowError = action.error;
+        break;
+      case LOG_IN_REQUEST:
+        draft.logInLoading = true;
+        draft.logInError = null;
+        draft.logInDone = false;
+        break;
+      case LOG_IN_SUCCESS:
+        draft.logInLoading = false;
+        draft.me = action.data;
+        draft.logInDone = true;
+        break;
+      case LOG_IN_FAILURE:
+        draft.logInLoading = false;
+        draft.logInError = action.error;
+        break;
+      // case KAKAO_LOGIN_REQUEST:
+      //   draft.kakaologInLoading = true;
+      //   draft.kakaologInError = null;
+      //   draft.kakaologInDone = false;
+      //   break;
+      // case KAKAO_LOGIN_SUCCESS:
+      //   draft.kakaologInLoading = false;
+      //   draft.me = action.data.code;
+      //   draft.kakaologInDone = true;
+      //   break;
+      // case KAKAO_LOGIN_FAILURE:
+      //   draft.kakaologInLoading = false;
+      //   draft.kakaologInError = action.error;
+      //   break;
+      case LOG_OUT_REQUEST:
+        draft.logOutLoading = true;
+        draft.logOutError = null;
+        draft.logOutDone = false;
+        break;
+      case LOG_OUT_SUCCESS:
+        draft.logOutLoading = false;
+        draft.logOutDone = true;
+        draft.me = null;
+        break;
+      case LOG_OUT_FAILURE:
+        draft.logOutLoading = false;
+        draft.logOutError = action.error;
+        break;
+      case SIGN_UP_REQUEST:
+        draft.signUpLoading = true;
+        draft.signUpError = null;
+        draft.signUpDone = false;
+        break;
+      case SIGN_UP_SUCCESS:
+        draft.signUpLoading = false;
+        draft.signUpDone = true;
+        break;
+      case SIGN_UP_FAILURE:
+        draft.signUpLoading = false;
+        draft.signUpError = action.error;
+        break;
+      case CHANGE_NICKNAME_REQUEST:
+        draft.changeNicknameLoading = true;
+        draft.changeNicknameError = null;
+        draft.changeNicknameDone = false;
+        break;
+      case CHANGE_NICKNAME_SUCCESS:
+        draft.me.nickname = action.data.nickname;
+        draft.changeNicknameLoading = false;
+        draft.changeNicknameDone = true;
+        break;
+      case CHANGE_NICKNAME_FAILURE:
+        draft.changeNicknameLoading = false;
+        draft.changeNicknameError = action.error;
+        break;
+      case ADD_POST_TO_ME:
+        draft.me.Posts.unshift({ id: action.data });
+        break;
       // return {
       //   ...state,
       //   me: {
@@ -292,9 +297,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       //     Posts: [{ id: action.data }, ...state.me.Posts],
       //   },
       // };
-    case REMOVE_POST_OF_ME:
-      draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
-      break;
+      case REMOVE_POST_OF_ME:
+        draft.me.Posts = draft.me.Posts.filter((v) => v.id !== action.data);
+        break;
       // return {
       //   ...state,
       //   me: {
@@ -302,9 +307,9 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       //     Posts: state.me.Posts.filter((v) => v.id !== action.data),
       //   },
       // };
-    default:
-      break;
-  }
-});
+      default:
+        break;
+    }
+  });
 
 export default reducer;

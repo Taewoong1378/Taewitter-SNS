@@ -38,7 +38,7 @@ import {
   UNLIKE_POST_REQUEST,
   UNLIKE_POST_SUCCESS,
   UPLOAD_IMAGES_FAILURE,
-  UPLOAD_IMAGES_REQUEST, 
+  UPLOAD_IMAGES_REQUEST,
   UPLOAD_IMAGES_SUCCESS,
   REMOVE_COMMENT_SUCCESS,
   REMOVE_COMMENT_FAILURE,
@@ -132,7 +132,7 @@ function* loadPost(action) {
 
 function loadPostsAPI(lastId) {
   // get에서 데이터를 넣기 위해서는 쿼리스트링을 이용해 물음표 뒤에 key=값으로 데이터를 넣어준다.
-  // lastId가 없는 경우에는 lastId를 0으로 해준다.  
+  // lastId가 없는 경우에는 lastId를 0으로 해준다.
   return axios.get(`/posts?lastId=${lastId || 0}`);
 }
 
@@ -174,7 +174,9 @@ function* loadUserPosts(action) {
 }
 
 function loadHashtagPostsAPI(data, lastId) {
-  return axios.get(`/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`);
+  return axios.get(
+    `/hashtag/${encodeURIComponent(data)}?lastId=${lastId || 0}`,
+  );
 }
 
 function* loadHashtagPosts(action) {

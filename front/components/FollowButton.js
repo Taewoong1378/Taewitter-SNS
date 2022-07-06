@@ -28,7 +28,7 @@ const FollowButton = ({ post }) => {
   // 게시글 작성자의 아이디와 내 아이디가 같으면 팔로우 버튼이 안 나오게 한다.
   if (post.User.id === me?.id) {
     return null;
-  }  
+  }
 
   return (
     <Button loading={followLoading || unfollowLoading} onClick={onClickButton}>

@@ -4,9 +4,20 @@ import { PlusOutlined } from '@ant-design/icons';
 import ImagesZoom from './ImagesZoom';
 
 const PostImages = ({ images }) => {
-  const imageStyle = useMemo(() => ({ width: '50%', display: 'inline-block' }), []);
+  const imageStyle = useMemo(
+    () => ({ width: '50%', display: 'inline-block' }),
+    [],
+  );
   const imageStyle2 = useMemo(() => ({ width: '50%' }), []);
-  const imageStyle3 = useMemo(() => ({ width: '50%', display: 'inline-block', textAlign: 'center', verticalAlign: 'middle' }), []);
+  const imageStyle3 = useMemo(
+    () => ({
+      width: '50%',
+      display: 'inline-block',
+      textAlign: 'center',
+      verticalAlign: 'middle',
+    }),
+    [],
+  );
   const [showImagesZoom, setShowImagesZoom] = useState(false);
 
   const onZoom = useCallback(() => {
@@ -20,7 +31,12 @@ const PostImages = ({ images }) => {
   if (images.length === 1) {
     return (
       <>
-        <img role="presentation" src={`${images[0].src}`} alt={images[0].src} onClick={onZoom} />
+        <img
+          role='presentation'
+          src={`${images[0].src}`}
+          alt={images[0].src}
+          onClick={onZoom}
+        />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -28,8 +44,20 @@ const PostImages = ({ images }) => {
   if (images.length === 2) {
     return (
       <>
-        <img role="presentation" style={imageStyle} src={`${images[0].src}`} alt={images[0].src} onClick={onZoom} />
-        <img role="presentation" style={imageStyle} src={`${images[1].src}`} alt={images[1].src} onClick={onZoom} />
+        <img
+          role='presentation'
+          style={imageStyle}
+          src={`${images[0].src}`}
+          alt={images[0].src}
+          onClick={onZoom}
+        />
+        <img
+          role='presentation'
+          style={imageStyle}
+          src={`${images[1].src}`}
+          alt={images[1].src}
+          onClick={onZoom}
+        />
         {showImagesZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -37,12 +65,14 @@ const PostImages = ({ images }) => {
   return (
     <>
       <div>
-        <img role="presentation" style={imageStyle2} src={`${images[0].src}`} alt={images[0].src} onClick={onZoom} />
-        <div
-          role="presentation"
-          style={imageStyle3}
+        <img
+          role='presentation'
+          style={imageStyle2}
+          src={`${images[0].src}`}
+          alt={images[0].src}
           onClick={onZoom}
-        >
+        />
+        <div role='presentation' style={imageStyle3} onClick={onZoom}>
           <PlusOutlined />
           <br />
           {images.length - 1}
@@ -55,9 +85,11 @@ const PostImages = ({ images }) => {
 };
 
 PostImages.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.shape({
-    src: PropTypes.string,
-  })).isRequired,
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      src: PropTypes.string,
+    }),
+  ).isRequired,
 };
 
 export default PostImages;

@@ -23,10 +23,13 @@ const Home = () => {
 
   useEffect(() => {
     if (reportPostDone) {
-        message.success('신고가 접수되었습니다. 빠른 시일 내에 조치하겠습니다.', 5);
+      message.success(
+        '신고가 접수되었습니다. 빠른 시일 내에 조치하겠습니다.',
+        5,
+      );
     }
     if (reportPostError) {
-        message.error('에러가 발생했습니다. 조금 뒤에 다시 시도하세요.', 5);
+      message.error('에러가 발생했습니다. 조금 뒤에 다시 시도하세요.', 5);
     }
   }, [reportPostDone, reportPostError]);
 
@@ -38,7 +41,10 @@ const Home = () => {
 
   useEffect(() => {
     function onScroll() {
-      if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+      if (
+        window.pageYOffset + document.documentElement.clientHeight >
+        document.documentElement.scrollHeight - 300
+      ) {
         if (hasMorePosts && !loadPostsLoading) {
           const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
@@ -56,25 +62,29 @@ const Home = () => {
   return (
     <AppLayout>
       {me && <PostForm />}
-      {mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
+      {mainPosts.map((post) => (
+        <PostCard key={post.id} post={post} />
+      ))}
     </AppLayout>
   );
 };
 
-export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
-  }
-  context.store.dispatch({
-    type: LOAD_MY_INFO_REQUEST,
-  });
-  context.store.dispatch({
-    type: LOAD_POSTS_REQUEST,
-  });
-  context.store.dispatch(END);
-  await context.store.sagaTask.toPromise();
-});
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    const cookie = context.req ? context.req.headers.cookie : '';
+    axios.defaults.headers.Cookie = '';
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+    }
+    context.store.dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+    context.store.dispatch({
+      type: LOAD_POSTS_REQUEST,
+    });
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+  },
+);
 
 export default Home;

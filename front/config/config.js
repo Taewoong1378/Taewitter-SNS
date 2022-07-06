@@ -1,5 +1,8 @@
 // eslint-disable-next-line import/prefer-default-export
-export const backUrl = process.env.NODE_ENV === 'production' ? 'https://api.taewitter.com' : 'http://localhost:3065';
+export const backUrl =
+  process.env.NODE_ENV === 'production'
+    ? 'https://api.taewitter.com'
+    : 'http://localhost:3065';
 // const CLIENT_ID = process.env.KAKAO_ID;
 
 // const KAKAO_URI = process.env.NODE_ENV === 'production' ? 'https://api.taewitter.com/auth/kakao/callback' : 'http://localhost:3065/auth/kakao/callback';
